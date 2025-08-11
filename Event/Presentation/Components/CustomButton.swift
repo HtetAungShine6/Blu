@@ -6,24 +6,7 @@ enum ButtonTypes {
   case tertiary
 }
 
-protocol CustomButtonConfig {
-  var title: String { get }
-  var icon: String? { get }
-  var type: ButtonTypes { get }
-  var action: () -> Void { get }
-  var width: CGFloat? { get }
-  var height: CGFloat? { get }
-  var horizontalPadding: CGFloat { get }
-  var verticalPadding: CGFloat { get }
-  var fontSize: CGFloat { get }
-  var backgroundColor: Color { get }
-  var foregroundColor: Color { get }
-  var strokeColor: Color { get }
-  var strokeWidth: CGFloat { get }
-  var cornerRadius: CGFloat { get }
-}
-
-struct DefaultButtonConfig: CustomButtonConfig {
+struct ButtonConfig {
   let title: String
   let icon: String?
   let type: ButtonTypes
@@ -72,8 +55,8 @@ struct DefaultButtonConfig: CustomButtonConfig {
   }
 }
 
-struct CustomButton<Config: CustomButtonConfig>: View {
-  var config: Config
+struct AppButton: View {
+  var config: ButtonConfig
   
   var body: some View {
     Button(action: config.action) {
@@ -108,7 +91,7 @@ struct CustomButton<Config: CustomButtonConfig>: View {
 
 #Preview {
   VStack(spacing: 16) {
-    CustomButton(config: DefaultButtonConfig(
+    AppButton(config: DefaultButtonConfig(
       title: "Sign In",
       icon: "arrow.right",
       type: .primary,
@@ -120,7 +103,7 @@ struct CustomButton<Config: CustomButtonConfig>: View {
       print("Primary tapped")
     })
     
-    CustomButton(config: DefaultButtonConfig(
+    AppButton(config: DefaultButtonConfig(
       title: "Edit",
       icon: "square.and.pencil",
       type: .secondary,
@@ -131,7 +114,7 @@ struct CustomButton<Config: CustomButtonConfig>: View {
       print("Secondary tapped")
     })
     
-    CustomButton(config: DefaultButtonConfig(
+    AppButton(config: DefaultButtonConfig(
       title: "Tertiary",
       type: .tertiary,
       foregroundColor: .green
