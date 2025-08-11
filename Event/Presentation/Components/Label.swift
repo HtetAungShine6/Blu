@@ -7,19 +7,19 @@ struct Label: View {
   private var color: Color = AppTheme.AppColor.TextColor.primaryDark
   private var maxLines: Int? = 0
   private var alignment: TextAlignment? = .center
-    
+  
   public init(_ text: String) {
     self.text = text
   }
   
-    var body: some View {
-        Text(text)
-        .font(textStyle)
-        .foregroundStyle(color)
-        .lineLimit(maxLines)
-        .multilineTextAlignment(alignment ?? .leading)
-        
-    }
+  var body: some View {
+    Text(text)
+      .font(textStyle)
+      .foregroundStyle(color)
+      .lineLimit(maxLines)
+      .multilineTextAlignment(alignment ?? .leading)
+    
+  }
   
   enum Style {
     case h1, h2, h3, h4, h5, subtitle1, subtitle2, body1, body2, small1, small2, small3, small4, button1, button2, button3
@@ -51,7 +51,7 @@ struct Label: View {
 
 
 extension Label {
- 
+  
   public func font(_ style: Style) -> Label {
     var copy = self
     copy.font = style
