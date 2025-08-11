@@ -9,9 +9,17 @@ import SwiftUI
 
 @main
 struct EventApp: App {
+    
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @AppStorage("appState") var isSingIn = false
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if !isSingIn {
+                AuthView(authViewModel: AuthViewModelImpl(authRepository: AuthRepositoryImpl(googleOAuthService: GoogleOAuthServiceImpl())))
+            } else {
+                RootView()
+            }
         }
     }
 }
