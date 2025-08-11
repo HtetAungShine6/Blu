@@ -21,3 +21,6 @@ struct AuthView<ViewModel: AuthViewModel>: View {
         }
     }
 }
+
+
+
