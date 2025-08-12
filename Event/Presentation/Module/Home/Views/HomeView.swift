@@ -28,7 +28,7 @@ struct HomeView<ViewModel: HomeViewModel>: View {
         .toolbar {
             ToolbarItem {
                 Button {
-                    viewModel.signOut(.google)
+                    viewModel.signOut()
                 } label: {
                     Image(systemName: "door.left.hand.open")
                 }
