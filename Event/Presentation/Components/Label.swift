@@ -16,7 +16,7 @@ struct Label: View {
     Text(text)
       .font(textStyle)
       .foregroundStyle(color)
-      .lineLimit(maxLines)
+      .lineLimit(maxLines ?? nil)
       .multilineTextAlignment(alignment ?? .leading)
     
   }
