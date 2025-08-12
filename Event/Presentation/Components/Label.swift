@@ -45,7 +45,6 @@ struct Label: View {
     case .button3: return AppTheme.TextStyle.button3()
     }
   }
-  
 }
 
 
