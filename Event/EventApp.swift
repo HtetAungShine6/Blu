@@ -9,7 +9,8 @@ struct EventApp: App {
   var body: some Scene {
     WindowGroup {
       if !isSignIn {
-        AuthView(authViewModel: AuthViewModelImpl(authRepository: AuthRepositoryImpl(googleOAuthService: GoogleOAuthServiceImpl())))
+        //AuthView(authViewModel: AuthViewModelImpl(authRepository: AuthRepositoryImpl(googleOAuthService: GoogleOAuthServiceImpl())))
+        OnboardingView()
       } else {
         RootView()
       }
