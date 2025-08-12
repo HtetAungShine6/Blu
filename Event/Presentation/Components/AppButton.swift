@@ -6,6 +6,62 @@ enum ButtonTypes {
   case tertiary
 }
 
+struct AppButton: View {
+  var config: ButtonConfig
+  
+  var body: some View {
+    Button(action: config.action) {
+      HStack {
+        if config.type == .secondary {
+          if let icon = config.icon {
+            Image(systemName: icon)
+          }
+          Text(config.title)
+            .font(config.textStyle)
+        }
+        
+        if config.type == .primary {
+          Spacer()
+          Text(config.title)
+            .font(config.textStyle)
+          Spacer()
+          if let icon = config.icon {
+            Image(systemName: icon)
+              .padding(6)
+              .background(
+                Circle()
+                  .fill(Color.white.opacity(0.2))
+              )
+          }
+        }
+        
+        if config.type == .tertiary {
+          Text(config.title)
+            .font(config.textStyle)
+          if let icon = config.icon {
+            Image(systemName: icon)
+          }
+        }
+      }
+      .padding(.horizontal, config.horizontalPadding)
+      .padding(.vertical, config.verticalPadding)
+      .frame(width: config.width, height: config.height)
+      .background(config.type == .primary ? config.backgroundColor : Color.clear)
+      .foregroundColor(config.type == .primary ? config.foregroundColor :
+                        config.type == .secondary ? config.strokeColor : config.foregroundColor)
+      .overlay(
+        Group {
+          if config.type == .secondary {
+            RoundedRectangle(cornerRadius: config.cornerRadius)
+              .stroke(config.strokeColor, lineWidth: config.strokeWidth)
+          }
+        }
+      )
+      .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
+    }
+  }
+}
+
 struct ButtonConfig {
   enum Style {
     case h1, h2, h3, h4, h5, subtitle1, subtitle2, body1, body2, small1, small2, small3, small4, button1, button2, button3
@@ -60,7 +116,7 @@ struct ButtonConfig {
     foregroundColor: Color = .white,
     strokeColor: Color = .blue,
     strokeWidth: CGFloat = 2,
-    cornerRadius: CGFloat = .radius4,
+    cornerRadius: CGFloat = .radius3,
     action: @escaping () -> Void
   ) {
     self.title = title
@@ -77,62 +133,6 @@ struct ButtonConfig {
     self.strokeWidth = strokeWidth
     self.cornerRadius = cornerRadius
     self.action = action
-  }
-}
-
-struct AppButton: View {
-  var config: ButtonConfig
-  
-  var body: some View {
-    Button(action: config.action) {
-      HStack {
-        if config.type == .secondary {
-          if let icon = config.icon {
-            Image(systemName: icon)
-          }
-          Text(config.title)
-            .font(config.textStyle)
-        }
-        
-        if config.type == .primary {
-          Spacer()
-          Text(config.title)
-            .font(config.textStyle)
-          Spacer()
-          if let icon = config.icon {
-            Image(systemName: icon)
-              .padding(6)
-              .background(
-                Circle()
-                  .fill(Color.white.opacity(0.2)) 
-              )
-          }
-        }
-        
-        if config.type == .tertiary {
-          Text(config.title)
-            .font(config.textStyle)
-          if let icon = config.icon {
-            Image(systemName: icon)
-          }
-        }
-      }
-      .padding(.horizontal, config.horizontalPadding)
-      .padding(.vertical, config.verticalPadding)
-      .frame(width: config.width, height: config.height)
-      .background(config.type == .primary ? config.backgroundColor : Color.clear)
-      .foregroundColor(config.type == .primary ? config.foregroundColor :
-                        config.type == .secondary ? config.strokeColor : config.foregroundColor)
-      .overlay(
-        Group {
-          if config.type == .secondary {
-            RoundedRectangle(cornerRadius: config.cornerRadius)
-              .stroke(config.strokeColor, lineWidth: config.strokeWidth)
-          }
-        }
-      )
-      .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
-    }
   }
 }
 
