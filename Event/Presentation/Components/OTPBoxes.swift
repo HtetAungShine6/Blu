@@ -3,7 +3,7 @@ import SwiftUI
 struct OTPBoxes: View {
   @Binding var otp: [String]
   @FocusState private var focusedIndex: Int?
-  
+  @FocusState.Binding var isFocused: Bool
   private let length = 4
   
   var body: some View {
@@ -26,11 +26,13 @@ struct OTPBoxes: View {
         .accentColor(.clear)
         .shadow(color: .accent, radius: 0.2, x: -0.15, y: 0.15)
         .focused($focusedIndex, equals: index)
+        .focused($isFocused)
       }
     }
     .onAppear {
       DispatchQueue.main.async {
         focusedIndex = 0
+        isFocused = true
       }
     }
   }
@@ -38,7 +40,8 @@ struct OTPBoxes: View {
 
 #Preview {
   @Previewable @State var otp = Array(repeating: "", count: 4)
-  OTPBoxes(otp: $otp)
+  @Previewable @FocusState var isFocused: Bool
+  OTPBoxes(otp: $otp, isFocused: $isFocused)
 }
 
 

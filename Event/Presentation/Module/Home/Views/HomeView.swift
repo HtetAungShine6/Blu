@@ -39,7 +39,7 @@ struct HomeView<ViewModel: HomeViewModel>: View {
       
       VStack {
 //        OTPBoxes(otp: $otp, isFocused: $isFocusedOtp)
-        OTPBoxes(otp: $otp)
+        OTPBoxes(otp: $otp, isFocused: $isFocusedOtp)
         AppButton(config: ButtonConfig(
           title: "Show OTP Code",
           icon: "arrow.right",
