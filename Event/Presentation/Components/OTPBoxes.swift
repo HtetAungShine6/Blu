@@ -45,7 +45,7 @@ struct OTPBoxes: View {
 extension OTPBoxes {
   private func handleBackspace(at index: Int) {
     if !otp[index].isEmpty {
-      Feedback.rigid()
+      HapticPlayer.play(.rigid)
       otp[index] = ""
     }
     
@@ -59,14 +59,14 @@ extension OTPBoxes {
     guard filtered != otp[index] else { return }
     
     if filtered.count > 1 {
-      Feedback.light()
+      HapticPlayer.play(.light)
       for (offset, char) in filtered.prefix(length - index).enumerated() {
         otp[index + offset] = String(char)
       }
       let nextIndex = index + filtered.count
       focusedIndex = nextIndex < length ? nextIndex : nil
     } else {
-      Feedback.light()
+      HapticPlayer.play(.light)
       if filtered.isEmpty {
         let hadValue = !otp[index].isEmpty
         otp[index] = ""
@@ -88,7 +88,7 @@ extension OTPBoxes {
 
 
 //MARK: - OTP TextField
-struct OTPTextField: UIViewRepresentable {
+fileprivate struct OTPTextField: UIViewRepresentable {
   @Binding var text: String
   var onBackspace: () -> Void
   
@@ -127,7 +127,7 @@ struct OTPTextField: UIViewRepresentable {
 
 
 //MARK: - Backspace detection to delete the state
-class BackspaceDetectingTextField: UITextField {
+fileprivate class BackspaceDetectingTextField: UITextField {
   var onBackspace: (() -> Void)?
   
   override func deleteBackward() {
