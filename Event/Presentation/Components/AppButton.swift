@@ -58,10 +58,15 @@ struct AppButton: View {
         }
       )
       .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
+      .shadow(
+        color: config.type == .primary ? config.backgroundColor : config.type == .secondary ? config.strokeColor : .clear,
+        radius: 0.2,
+        x: 0,
+        y: 0.1
+      )
     }
   }
 }
-
 
 
 
@@ -132,6 +137,9 @@ struct ButtonConfig {
     self.fontSize = fontSize
     self.backgroundColor = backgroundColor
     self.foregroundColor = foregroundColor
+    self.strokeColor = strokeColor
+    self.strokeWidth = strokeWidth
+    self.cornerRadius = cornerRadius
     self.strokeColor = strokeColor
     self.strokeWidth = strokeWidth
     self.cornerRadius = cornerRadius

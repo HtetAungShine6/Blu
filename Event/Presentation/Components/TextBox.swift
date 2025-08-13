@@ -219,6 +219,20 @@ struct TextBoxConfig {
     ), isFocused: $isFocused)
     
     TextBox(config: TextBoxConfig(
+      placeholder: "Email Sign In",
+      icon: "lock",
+      type: .normal,
+      text: $passwordSignIn,
+      width: 365,
+      height: 60,
+      font: .body1,
+      strokeColor: .textSecondaryDark,
+      validationMessage: "Wrong email",
+      validationColor: .red,
+      showValidation: true
+    ), isFocused: $isFocused)
+    
+    TextBox(config: TextBoxConfig(
       placeholder: "Password Sign Up",
       icon: "lock",
       type: .secure,
@@ -241,7 +255,6 @@ struct TextBoxConfig {
     ), isFocused: $isFocused)
   }
 }
-
 
 extension TextBox {
   private func validatePassword(_ password: String) {

@@ -60,7 +60,6 @@ struct SecureCompatibleTextField: UIViewRepresentable {
     if isSecureEntry {
       let securedText = String(repeating: "•", count: text.count)
       
-      // Adding new character → reveal last briefly
       if (textField.text?.count ?? 0) < text.count {
         var partiallyHidden = securedText
         partiallyHidden.removeLast()

@@ -51,10 +51,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B32BF5242E4BB73F0023BBB4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B3E612B02E3F5D93002E2BEF = {
 			isa = PBXGroup;
 			children = (
 				B3E612BB2E3F5D93002E2BEF /* Event */,
+				B32BF5242E4BB73F0023BBB4 /* Frameworks */,
 				B3E612BA2E3F5D93002E2BEF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -281,7 +289,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Event/Preview Content\"";
-				DEVELOPMENT_TEAM = B2KXH9S8WX;
+				DEVELOPMENT_TEAM = MAFKHQX2GF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Event/Info.plist;
@@ -311,7 +319,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Event/Preview Content\"";
-				DEVELOPMENT_TEAM = B2KXH9S8WX;
+				DEVELOPMENT_TEAM = MAFKHQX2GF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Event/Info.plist;
