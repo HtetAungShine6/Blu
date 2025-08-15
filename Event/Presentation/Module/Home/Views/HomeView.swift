@@ -32,60 +32,12 @@ struct HomeView<ViewModel: HomeViewModel>: View {
       Color.clear
         .contentShape(Rectangle())
         .onTapGesture {
-//          isFocusedSignIn = false
-//          isFocusedSignUp = false
+          //          isFocusedSignIn = false
+          //          isFocusedSignUp = false
           isFocusedOtp = false
         }
-      
       VStack {
-//        OTPBoxes(otp: $otp, isFocused: $isFocusedOtp)
-        OTPBoxes(otp: $otp, isFocused: $isFocusedOtp)
-        AppButton(config: ButtonConfig(
-          title: "Show OTP Code",
-          icon: "arrow.right",
-          type: .primary,
-          width: 300,
-          height: 50,
-          fontSize: .button1,
-          backgroundColor: .accent,
-          action: {
-            print("\(otp))")
-          }))
-//        
-//        TextBox(config: TextBoxConfig(
-//          placeholder: "Password Sign In",
-//          icon: "lock",
-//          type: .secure,
-//          text: $passwordSignIn,
-//          width: 365,
-//          height: 60,
-//          font: .body1,
-//          strokeColor: .textSecondaryDark,
-//          validationMessage: "Wrong password",
-//          showValidation: toggleValidation
-//        ), isFocused: $isFocusedSignIn)
-//        
-//        Button("Sign In") {
-//          toggleValidation.toggle()
-//        }
-//        
-//        TextBox(config: TextBoxConfig(
-//          placeholder: "Password Sign Up",
-//          icon: "lock",
-//          type: .secure,
-//          useInSignUp: true,
-//          text: $passwordSignUp,
-//          width: 365,
-//          height: 60,
-//          font: .body1,
-//          strokeColor: .textSecondaryDark
-//        ), isFocused: $isFocusedSignUp)
-//        
-//        Text("Hello KOKO MGMG KO Shine:")
-//        
-//        Button("Go to Home Detail") {
-//          navigator.push(.homeDetail)
-//        }
+        Text("Hello, World!")
       }
     }
     .toolbar {

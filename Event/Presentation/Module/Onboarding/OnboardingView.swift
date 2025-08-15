@@ -122,14 +122,18 @@ extension OnboardingView {
   
   private var pageControlButtons: some View {
     HStack {
-      AppButton(config: ButtonConfig(title: "Prev", type: .tertiary, fontSize: .button1, action: {
-        if (currentIndex != 0){
-          HapticPlayer.play(.medium)
-          shiftBubbles()
-          withAnimation(.snappy) {
-            currentIndex -= 1
+      AppButton(config: ButtonConfig(
+        type: .link,
+        title: "Prev",
+        fontStyle: .body1,
+        action: {
+          if (currentIndex != 0){
+            HapticPlayer.play(.medium)
+            shiftBubbles()
+            withAnimation(.snappy) {
+              currentIndex -= 1
+            }
           }
-        }
       }))
       .opacity(currentIndex == 0 ? 0.5 : 1)
       .disabled(currentIndex == 0)
@@ -144,14 +148,19 @@ extension OnboardingView {
       }
       
       Spacer()
-      AppButton(config: ButtonConfig(title: "Next", type: .tertiary, fontSize: .body1, action: {
-        if (currentIndex < onboardingPages.count - 1){
-          HapticPlayer.play(.medium)
-          shiftBubbles()
-          withAnimation(.snappy) {
-            currentIndex += 1
+      
+      AppButton(config: ButtonConfig(
+        type: .link,
+        title: "Next",
+        fontStyle: .body1,
+        action: {
+          if (currentIndex < onboardingPages.count - 1){
+            HapticPlayer.play(.medium)
+            shiftBubbles()
+            withAnimation(.snappy) {
+              currentIndex += 1
+            }
           }
-        }
       }))
     }
     .padding(.top,.spacer16)

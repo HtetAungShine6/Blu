@@ -18,9 +18,13 @@ struct TextBox: View {
   
   var body: some View {
     VStack(alignment: .leading, spacing: 4) {
-      HStack {
+      HStack() {
         if let icon = config.icon {
           Image(systemName: icon)
+            .resizable()
+            .scaledToFit()
+            .frame(width: 18, height: 18)
+            .frame(width: 24, alignment: .center)
             .foregroundColor(config.strokeColor)
         }
         
@@ -34,12 +38,12 @@ struct TextBox: View {
           )
           .focused($isFocused)
           .onChange(of: config.text.wrappedValue) { _, newValue in
-            if config.useInSignUp {
+            if config.type == .secure && config.useInSignUp {
               validatePassword(newValue)
+            } else if config.type == .secure && config.useInSignIn {
+              validateEmail(newValue)
             }
           }
-          
-          Spacer(minLength: 8)
           
           Button {
             isSecureVisible.toggle()
@@ -55,6 +59,11 @@ struct TextBox: View {
             .font(config.textStyle)
             .foregroundColor(config.foregroundColor)
             .focused($isFocused)
+            .onChange(of: config.text.wrappedValue) { _, newValue in
+              if config.type == .normal && config.useInSignIn {
+                validateEmail(newValue)
+              }
+            }
         }
       }
       .padding(.horizontal, config.horizontalPadding)
@@ -83,21 +92,20 @@ struct TextBox: View {
       if config.useInSignUp {
         validatePassword(config.text.wrappedValue)
       }
+      if config.useInSignIn {
+        validateEmail(config.text.wrappedValue)
+      }
     }
   }
 }
 
 
-
 struct TextBoxConfig {
-  enum Style {
-    case h1, h2, h3, h4, h5, subtitle1, subtitle2, body1, body2, small1, small2, small3, small4, button1, button2, button3
-  }
-  
   let placeholder: String
   let icon: String?
   let type: TextBoxTypes
   let useInSignUp: Bool
+  let useInSignIn: Bool
   var text: Binding<String>
   var width: CGFloat?
   var height: CGFloat?
@@ -113,32 +121,12 @@ struct TextBoxConfig {
   var validationColor: Color? = nil
   var showValidation: Bool? = nil
   
-  var textStyle: Font {
-    switch font {
-    case .h1: return AppTheme.TextStyle.h1()
-    case .h2: return AppTheme.TextStyle.h2()
-    case .h3: return AppTheme.TextStyle.h3()
-    case .h4: return AppTheme.TextStyle.h4()
-    case .h5: return AppTheme.TextStyle.h5()
-    case .subtitle1: return AppTheme.TextStyle.subtitle1()
-    case .subtitle2: return AppTheme.TextStyle.subtitle2()
-    case .body1: return AppTheme.TextStyle.body1()
-    case .body2: return AppTheme.TextStyle.body2()
-    case .small1: return AppTheme.TextStyle.small1()
-    case .small2: return AppTheme.TextStyle.small2()
-    case .small3: return AppTheme.TextStyle.small3()
-    case .small4: return AppTheme.TextStyle.small4()
-    case .button1: return AppTheme.TextStyle.button1()
-    case .button2: return AppTheme.TextStyle.button2()
-    case .button3: return AppTheme.TextStyle.button3()
-    }
-  }
-  
   init(
     placeholder: String,
     icon: String? = nil,
     type: TextBoxTypes,
     useInSignUp: Bool = false,
+    useInSignIn: Bool = false,
     text: Binding<String>,
     width: CGFloat? = nil,
     height: CGFloat? = nil,
@@ -158,6 +146,7 @@ struct TextBoxConfig {
     self.icon = icon
     self.type = type
     self.useInSignUp = useInSignUp
+    self.useInSignIn = useInSignIn
     self.text = text
     self.width = width
     self.height = height
@@ -172,6 +161,32 @@ struct TextBoxConfig {
     self.validationMessage = validationMessage
     self.validationColor = validationColor
     self.showValidation = showValidation
+  }
+}
+
+extension TextBoxConfig {
+  enum Style {
+    case h1, h2, h3, h4, h5, subtitle1, subtitle2, body1, body2, small1, small2, small3, small4, button1, button2, button3
+  }
+  var textStyle: Font {
+    switch font {
+    case .h1: return AppTheme.TextStyle.h1()
+    case .h2: return AppTheme.TextStyle.h2()
+    case .h3: return AppTheme.TextStyle.h3()
+    case .h4: return AppTheme.TextStyle.h4()
+    case .h5: return AppTheme.TextStyle.h5()
+    case .subtitle1: return AppTheme.TextStyle.subtitle1()
+    case .subtitle2: return AppTheme.TextStyle.subtitle2()
+    case .body1: return AppTheme.TextStyle.body1()
+    case .body2: return AppTheme.TextStyle.body2()
+    case .small1: return AppTheme.TextStyle.small1()
+    case .small2: return AppTheme.TextStyle.small2()
+    case .small3: return AppTheme.TextStyle.small3()
+    case .small4: return AppTheme.TextStyle.small4()
+    case .button1: return AppTheme.TextStyle.button1()
+    case .button2: return AppTheme.TextStyle.button2()
+    case .button3: return AppTheme.TextStyle.button3()
+    }
   }
 }
 
@@ -220,7 +235,7 @@ struct TextBoxConfig {
     
     TextBox(config: TextBoxConfig(
       placeholder: "Email Sign In",
-      icon: "lock",
+      icon: "envelope",
       type: .normal,
       text: $passwordSignIn,
       width: 365,
@@ -230,6 +245,18 @@ struct TextBoxConfig {
       validationMessage: "Wrong email",
       validationColor: .red,
       showValidation: true
+    ), isFocused: $isFocused)
+    
+    TextBox(config: TextBoxConfig(
+      placeholder: "Email Sign In 2",
+      icon: "envelope",
+      type: .normal,
+      useInSignIn: true,
+      text: $passwordSignIn,
+      width: 365,
+      height: 60,
+      font: .body1,
+      strokeColor: .textSecondaryDark
     ), isFocused: $isFocused)
     
     TextBox(config: TextBoxConfig(
@@ -257,6 +284,27 @@ struct TextBoxConfig {
 }
 
 extension TextBox {
+  
+  //MARK: - Email Validation
+  private func validateEmail(_ email: String) {
+    if email.isEmpty {
+      internalValidationMessage = nil
+      internalValidationColor = nil
+    } else if isValidEmail(email) {
+      internalValidationMessage = "Valid email"
+      internalValidationColor = .green
+    } else {
+      internalValidationMessage = "Invalid email format"
+      internalValidationColor = .red
+    }
+  }
+  
+  private func isValidEmail(_ email: String) -> Bool {
+    let pattern = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
+    return email.range(of: pattern, options: .regularExpression) != nil
+  }
+  
+  //MARK: - Password Validation
   private func validatePassword(_ password: String) {
     if password.isEmpty {
       internalValidationMessage = nil
@@ -275,8 +323,9 @@ extension TextBox {
     return password.range(of: pattern, options: .regularExpression) != nil
   }
   
+  //MARK: - Validation Message Setup (Color, String)
   private func validationMessage() -> String? {
-    if config.useInSignUp {
+    if config.useInSignUp || config.useInSignIn {
       return internalValidationMessage
     } else {
       return config.validationMessage
@@ -284,7 +333,7 @@ extension TextBox {
   }
   
   private func validationColor() -> Color? {
-    if config.useInSignUp {
+    if config.useInSignUp || config.useInSignIn {
       return internalValidationColor
     } else {
       return config.validationColor
@@ -292,7 +341,7 @@ extension TextBox {
   }
   
   private func shouldShowValidationMessage() -> Bool {
-    if config.useInSignUp {
+    if config.useInSignUp || config.useInSignIn {
       return internalValidationMessage != nil
     } else {
       return (config.showValidation ?? false) && config.validationMessage != nil
@@ -301,14 +350,14 @@ extension TextBox {
   
   private func borderColor() -> Color {
     if isFocused {
-      if config.useInSignUp {
+      if config.useInSignUp || config.useInSignIn {
         return internalValidationColor ?? .accent
       } else if config.showValidation ?? false {
         return config.validationColor ?? .accent
       }
       return .accent
     } else {
-      if config.useInSignUp {
+      if config.useInSignUp || config.useInSignIn {
         return internalValidationColor ?? config.strokeColor
       } else if config.showValidation ?? false {
         return config.validationColor ?? config.strokeColor
