@@ -7,9 +7,11 @@ struct SignUpView<ViewModel: AuthViewModel>: View {
   @FocusState private var isFullNameFoucsed: Bool
   @FocusState private var isEmailFocused: Bool
   @FocusState private var isPasswordFocused: Bool
+  @FocusState private var isConfirmPasswordFocused: Bool
   @State private var fullName: String = ""
   @State private var email: String = ""
   @State private var password: String = ""
+  @State private var confirmPassword: String = ""
   @State private var showValidation: Bool = false
   
   let navigator: AuthNavigator
@@ -27,6 +29,7 @@ struct SignUpView<ViewModel: AuthViewModel>: View {
           isFullNameFoucsed = false
           isEmailFocused = false
           isPasswordFocused = false
+          isConfirmPasswordFocused = false
         }
       VStack(spacing: .spacer7) {
         title
@@ -51,11 +54,13 @@ extension SignUpView {
       email: $email,
       password: $password,
       fullName: $fullName,
+      confirmPassword: $confirmPassword,
       validationMessage: $viewModel.error,
       showValidation: $showValidation,
       isEmailFocused: $isEmailFocused,
       isPasswordFocused: $isPasswordFocused,
-      isFullNameFocused: $isFullNameFoucsed
+      isFullNameFocused: $isFullNameFoucsed,
+      isConfirmPasswordFocused: $isConfirmPasswordFocused
     )
     .onChange(of: viewModel.error) { _, newErrorValue in
       showValidation = newErrorValue != nil && !newErrorValue!.isEmpty

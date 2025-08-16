@@ -81,14 +81,15 @@ struct TextBox: View {
       )
       .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
       .shadow(color: isFocused ? borderColor().opacity(0.4) : .clear, radius: isFocused ? 3 : 0, x: 0, y: 0)
-      .animation(.easeInOut(duration: 0.25), value: isFocused)
-      .animation(.easeInOut(duration: 0.5), value: internalValidationColor)
+      .animation(.easeInOut(duration: 0.3), value: isFocused)
+      .animation(.easeInOut(duration: 0.3), value: internalValidationColor)
       
       if shouldShowValidationMessage(), let message = validationMessage() {
         Text(message)
           .font(.caption)
           .foregroundColor(validationColor() ?? .red)
           .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
+          .animation(.easeInOut(duration: 0.3), value: internalValidationMessage)
       }
     }
     .onAppear {
@@ -123,6 +124,7 @@ struct TextBoxConfig {
   var validationMessage: String? = nil
   var validationColor: Color? = nil
   var showValidation: Bool? = nil
+  var passwordToMatch: String?
   
   init(
     placeholder: String,
@@ -143,7 +145,8 @@ struct TextBoxConfig {
     cornerRadius: CGFloat = .radius3,
     validationMessage: String? = nil,
     validationColor: Color? = .red,
-    showValidation: Bool? = false
+    showValidation: Bool? = false,
+    passwordToMatch: String? = nil
   ) {
     self.placeholder = placeholder
     self.icon = icon
@@ -164,6 +167,7 @@ struct TextBoxConfig {
     self.validationMessage = validationMessage
     self.validationColor = validationColor
     self.showValidation = showValidation
+    self.passwordToMatch = passwordToMatch
   }
 }
 
@@ -309,9 +313,27 @@ extension TextBox {
   
   //MARK: - Password Validation
   private func validatePassword(_ password: String) {
+    //    if password.isEmpty {
+    //      internalValidationMessage = nil
+    //      internalValidationColor = nil
+    //    } else if isStrongPassword(password) {
+    //      internalValidationMessage = "Strong password"
+    //      internalValidationColor = .green
+    //    } else {
+    //      internalValidationMessage = "Password is weak"
+    //      internalValidationColor = .red
+    //    }
     if password.isEmpty {
       internalValidationMessage = nil
       internalValidationColor = nil
+    } else if let match = config.passwordToMatch {
+      if password == match {
+        internalValidationMessage = "Passwords match"
+        internalValidationColor = .green
+      } else {
+        internalValidationMessage = "Passwords do not match"
+        internalValidationColor = .red
+      }
     } else if isStrongPassword(password) {
       internalValidationMessage = "Strong password"
       internalValidationColor = .green
