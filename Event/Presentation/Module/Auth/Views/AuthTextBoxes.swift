@@ -1,137 +1,112 @@
 import SwiftUI
 
-struct AuthTextBoxes: View {
+struct AuthTextBoxesConfig {
+  @FocusState.Binding var isEmailFocused: Bool
+  @FocusState.Binding var isPasswordFocused: Bool
+  var isFullNameFocused: FocusState<Bool>.Binding? = nil
+  var isConfirmPasswordFocused: FocusState<Bool>.Binding? = nil
   let useInSignIn: Bool
+  @Binding var email: String
+  @Binding var password: String
+  var fullName: Binding<String> = .constant("")
+  var confirmPassword: Binding<String> = .constant("")
+  var validationMessage: String? = nil
+  var showValidation: Bool = false
+}
+
+struct AuthTextBoxes: View {
   
-  @Binding private var email: String
-  @Binding private var password: String
-  @Binding private var fullName: String
-  @Binding private var confirmPassword: String
-  
-  @Binding private var validationMessage: String?
-  @Binding private var showValidation: Bool
-  
-  @FocusState.Binding private var isEmailFocused: Bool
-  @FocusState.Binding private var isPasswordFocused: Bool
-  private var isFullNameFocused: FocusState<Bool>.Binding?
-  private var isConfirmPasswordFocused: FocusState<Bool>.Binding?
+  var config: AuthTextBoxesConfig
   
   var body: some View {
     VStack(spacing: .spacer7) {
-      if useInSignIn {
+      if config.useInSignIn {
         TextBox(config: TextBoxConfig(
+          isFocused: config.$isEmailFocused,
           placeholder: "Enter your email",
           icon: "envelope",
           type: .normal,
           useInSignIn: true,
-          text: $email,
-          width: 365,
+          text: config.$email,
           height: 60,
           font: .body1,
           strokeColor: .textSecondaryDark,
-          validationMessage: validationMessage,
+          validationMessage: config.validationMessage,
           validationColor: .red,
-          showValidation: showValidation
-        ), isFocused: $isEmailFocused)
+          showValidation: config.showValidation
+        ))
         
         TextBox(config: TextBoxConfig(
+          isFocused: config.$isPasswordFocused,
           placeholder: "Enter your password",
           icon: "lock",
           type: .secure,
-          text: $password,
-          width: 365,
+          text: config.$password,
           height: 60,
           font: .body1,
           strokeColor: .textSecondaryDark,
-          validationMessage: validationMessage,
-          showValidation: showValidation
-        ), isFocused: $isPasswordFocused)
+          validationMessage: config.validationMessage,
+          showValidation: config.showValidation
+        ))
       } else {
-        if let fullNameFocused = isFullNameFocused {
+        if let fullNameFocused = config.isFullNameFocused {
           TextBox(config: TextBoxConfig(
+            isFocused: fullNameFocused,
             placeholder: "Enter your name",
             icon: "person",
             type: .normal,
-            text: $fullName,
-            width: 365,
+            text: config.fullName,
             height: 60,
             font: .body1,
             strokeColor: .textSecondaryDark
-          ), isFocused: fullNameFocused)
+          ))
         }
         
         TextBox(config: TextBoxConfig(
+          isFocused: config.$isEmailFocused,
           placeholder: "Enter your email",
           icon: "envelope",
           type: .normal,
           useInSignUp: true,
-          text: $email,
-          width: 365,
+          text: config.$email,
           height: 60,
           font: .body1,
           strokeColor: .textSecondaryDark,
-          validationMessage: validationMessage,
+          validationMessage: config.validationMessage,
           validationColor: .red,
-          showValidation: showValidation
-        ), isFocused: $isEmailFocused)
+          showValidation: config.showValidation
+        ))
         
         TextBox(config: TextBoxConfig(
+          isFocused: config.$isPasswordFocused,
           placeholder: "Enter your password",
           icon: "lock",
           type: .secure,
           useInSignUp: true,
-          text: $password,
-          width: 365,
+          text: config.$password,
           height: 60,
           font: .body1,
           strokeColor: .textSecondaryDark,
-          validationMessage: validationMessage,
-          showValidation: showValidation
-        ), isFocused: $isPasswordFocused)
+          validationMessage: config.validationMessage,
+          showValidation: config.showValidation
+        ))
         
-        if let isConfirmPasswordFocused = isConfirmPasswordFocused {
+        if let isConfirmPasswordFocused = config.isConfirmPasswordFocused {
           TextBox(config: TextBoxConfig(
-            placeholder: "Enter your password again",
-            icon: "lock",
+            isFocused: isConfirmPasswordFocused,
+            placeholder: "Confirm your password",
+            icon: "checkmark.shield",
             type: .secure,
             useInSignUp: true,
-            text: $confirmPassword,
-            width: 365,
+            text: config.confirmPassword,
             height: 60,
             font: .body1,
             strokeColor: .textSecondaryDark,
-            passwordToMatch: password
-          ), isFocused: isConfirmPasswordFocused)
+            passwordToMatch: config.password
+          ))
         }
       }
     }
-  }
-}
-
-extension AuthTextBoxes {
-  init(
-    useInSignIn: Bool,
-    email: Binding<String>,
-    password: Binding<String>,
-    fullName: Binding<String>? = nil,
-    confirmPassword: Binding<String>? = nil,
-    validationMessage: Binding<String?>,
-    showValidation: Binding<Bool>,
-    isEmailFocused: FocusState<Bool>.Binding,
-    isPasswordFocused: FocusState<Bool>.Binding,
-    isFullNameFocused: FocusState<Bool>.Binding? = nil,
-    isConfirmPasswordFocused: FocusState<Bool>.Binding? = nil
-  ) {
-    self.useInSignIn = useInSignIn
-    self._email = email
-    self._password = password
-    self._fullName = fullName ?? .constant("")
-    self._confirmPassword = confirmPassword ?? .constant("")
-    self._validationMessage = validationMessage
-    self._showValidation = showValidation
-    self._isEmailFocused = isEmailFocused
-    self._isPasswordFocused = isPasswordFocused
-    self.isFullNameFocused = isFullNameFocused
-    self.isConfirmPasswordFocused = isConfirmPasswordFocused
+    .padding(.horizontal, 20)
   }
 }

@@ -6,6 +6,7 @@ struct SignInView<ViewModel: AuthViewModel>: View {
   @State private var email: String = ""
   @State private var password: String = ""
   @State private var showValidation: Bool = false
+  @State private var isDiabled: Bool = false
   @FocusState private var isEmailFocused: Bool
   @FocusState private var isPasswordFocused: Bool
   
@@ -45,15 +46,14 @@ extension SignInView {
   }
   
   private var textBoxesForSignIn: some View {
-    AuthTextBoxes(
+    AuthTextBoxes(config: AuthTextBoxesConfig(
+      isEmailFocused: $isEmailFocused,
+      isPasswordFocused: $isPasswordFocused,
       useInSignIn: true,
       email: $email,
       password: $password,
-      validationMessage: $viewModel.error,
-      showValidation: $showValidation,
-      isEmailFocused: $isEmailFocused,
-      isPasswordFocused: $isPasswordFocused
-    )
+      validationMessage: viewModel.error,
+      showValidation: showValidation))
     .onChange(of: viewModel.error) { _, newErrorValue in
       showValidation = newErrorValue != nil && !newErrorValue!.isEmpty
     }
@@ -62,6 +62,7 @@ extension SignInView {
   private var emailSignInButton: some View {
     EmailAuthButton(
       useInSignIn: true,
+      isDisabled: isDiabled,
       action: {
         let dto = EmailSignInDto(email: email, password: password)
         Task {

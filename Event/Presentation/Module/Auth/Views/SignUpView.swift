@@ -11,6 +11,7 @@ struct SignUpView<ViewModel: AuthViewModel>: View {
   @State private var fullName: String = ""
   @State private var email: String = ""
   @State private var password: String = ""
+  @State private var isDisabled: Bool = false
   @State private var confirmPassword: String = ""
   @State private var showValidation: Bool = false
   
@@ -49,19 +50,19 @@ extension SignUpView {
   }
   
   private var textBoxesForSignUp: some View {
-    AuthTextBoxes(
+    AuthTextBoxes(config: AuthTextBoxesConfig(
+      isEmailFocused: $isEmailFocused,
+      isPasswordFocused: $isPasswordFocused,
+      isFullNameFocused: $isFullNameFoucsed,
+      isConfirmPasswordFocused: $isConfirmPasswordFocused,
       useInSignIn: false,
       email: $email,
       password: $password,
       fullName: $fullName,
       confirmPassword: $confirmPassword,
-      validationMessage: $viewModel.error,
-      showValidation: $showValidation,
-      isEmailFocused: $isEmailFocused,
-      isPasswordFocused: $isPasswordFocused,
-      isFullNameFocused: $isFullNameFoucsed,
-      isConfirmPasswordFocused: $isConfirmPasswordFocused
-    )
+      validationMessage: viewModel.error,
+      showValidation: showValidation
+    ))
     .onChange(of: viewModel.error) { _, newErrorValue in
       showValidation = newErrorValue != nil && !newErrorValue!.isEmpty
     }
@@ -70,6 +71,7 @@ extension SignUpView {
   private var emailSignUpButton: some View {
     EmailAuthButton(
       useInSignIn: false,
+      isDisabled: isDisabled,
       action: {
         // API call here
       })

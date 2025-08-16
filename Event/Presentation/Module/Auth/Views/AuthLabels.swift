@@ -17,3 +17,4 @@ struct AuthLabel: View {
 #Preview {
   AuthLabel(title: "SIGN IN")
 }
+

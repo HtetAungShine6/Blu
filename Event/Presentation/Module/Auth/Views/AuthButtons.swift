@@ -2,6 +2,7 @@ import SwiftUI
 
 struct EmailAuthButton: View {
   let useInSignIn: Bool
+  let isDisabled: Bool
   let action: () -> Void
   var body: some View {
     if useInSignIn {
@@ -18,6 +19,7 @@ struct EmailAuthButton: View {
     } else {
       AppButton(config: ButtonConfig(
           type: .primary,
+          isDisabled: isDisabled,
           title: "SIGN UP",
           icon: "arrow.right",
           iconPosition: .right,
@@ -31,18 +33,19 @@ struct EmailAuthButton: View {
 }
 
 struct GoogleAuthButton: View {
+  @Environment(\.colorScheme) var colorScheme
   let action: () -> Void
   var body: some View {
     AppButton(config: ButtonConfig(
       type: .primary,
       title: "Login with Google",
       fontStyle: .body1,
-      icon: "GoogleIconLight",
+      icon: colorScheme == .light ? "GoogleIconLight" : "GoogleIconDark",
       iconPosition: .left,
       width: 300,
       height: 50,
-      backgroundColor: .textWhite,
-      foregroundColor: .textPrimaryDark,
+      backgroundColor: Color(.systemBackground),
+      foregroundColor: .primary,
       action: action
     ))
     .padding(.bottom, .spacer10)
@@ -60,7 +63,8 @@ struct AuthNavigatorButton: View {
         type: .link,
         title: useInSignIn ? "Sign Up" : "Sign In",
         fontStyle: .small1,
-        horizontalPadding: .spacer2,
+        width: 60,
+        horizontalPadding: .spacer0,
         foregroundColor: .accent,
         action: action
       ))

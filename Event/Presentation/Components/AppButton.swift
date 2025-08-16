@@ -34,10 +34,9 @@ struct AppButton: View {
       }
       .padding(.horizontal, config.horizontalPadding)
       .padding(.vertical, config.verticalPadding)
-      .frame(width: config.width, height: config.height)
-      .background(config.type == .primary ? config.backgroundColor : Color.clear)
-      .foregroundColor(config.type == .primary ? config.foregroundColor :
-                        config.type == .outline ? config.strokeColor : config.foregroundColor)
+      .frame(maxWidth: config.width ?? .infinity, maxHeight: config.height)
+      .background(config.type == .primary ? (config.isDisabled ? config.backgroundColor.opacity(0.4) : config.backgroundColor) : Color.clear)
+      .foregroundColor(config.isDisabled ? Color.gray.opacity(0.6) : (config.type == .primary ? config.foregroundColor : config.type == .outline ? config.strokeColor : config.foregroundColor))
       .overlay(
         Group {
           if config.type == .outline {
@@ -55,72 +54,9 @@ struct AppButton: View {
       )
       .shadow(color: config.type == .primary && config.iconPosition == .left ? .defaultBorder : .clear, radius: 2, x: 0, y: 0)
     }
+    .disabled(config.isDisabled)
   }
 }
-
-struct ButtonConfig {
-  // Button Type
-  let type: ButtonTypes
-  
-  // Button Title and Font Styling
-  let title: String
-  var fontStyle: Style
-  
-  // Button Icon and it's placement
-  let icon: String?
-  let iconPosition: IconPosition?
-  
-  // Button Size Customization Floats
-  var width: CGFloat? = nil
-  var height: CGFloat? = nil
-  var horizontalPadding: CGFloat
-  var verticalPadding: CGFloat
-  var strokeWidth: CGFloat
-  var cornerRadius: CGFloat
-  
-  // Button Color
-  var backgroundColor: Color
-  var foregroundColor: Color
-  var strokeColor: Color = .blue
-  
-  // Button Action
-  let action: () -> Void
-  
-  init(
-    type: ButtonTypes,
-    title: String,
-    fontStyle: Style = .button1,
-    icon: String? = nil,
-    iconPosition: IconPosition? = nil,
-    width: CGFloat? = nil,
-    height: CGFloat? = nil,
-    horizontalPadding: CGFloat = 16,
-    verticalPadding: CGFloat = 10,
-    strokeWidth: CGFloat = 2,
-    cornerRadius: CGFloat = .radius3,
-    backgroundColor: Color = .blue,
-    foregroundColor: Color = .white,
-    strokeColor: Color = .blue,
-    action: @escaping () -> Void
-  ) {
-    self.type = type
-    self.title = title
-    self.fontStyle = fontStyle
-    self.icon = icon
-    self.iconPosition = iconPosition
-    self.width = width
-    self.height = height
-    self.horizontalPadding = horizontalPadding
-    self.verticalPadding = verticalPadding
-    self.strokeWidth = strokeWidth
-    self.cornerRadius = cornerRadius
-    self.backgroundColor = backgroundColor
-    self.foregroundColor = foregroundColor
-    self.strokeColor = strokeColor
-    self.action = action
-  }
-}
-
 
 
 extension AppButton {
@@ -226,32 +162,6 @@ extension AppButton {
   }
 }
 
-extension ButtonConfig {
-  enum Style {
-    case h1, h2, h3, h4, h5, subtitle1, subtitle2, body1, body2, small1, small2, small3, small4, button1, button2, button3
-  }
-  var textStyle: Font {
-    switch fontStyle {
-    case .h1: return AppTheme.TextStyle.h1()
-    case .h2: return AppTheme.TextStyle.h2()
-    case .h3: return AppTheme.TextStyle.h3()
-    case .h4: return AppTheme.TextStyle.h4()
-    case .h5: return AppTheme.TextStyle.h5()
-    case .subtitle1: return AppTheme.TextStyle.subtitle1()
-    case .subtitle2: return AppTheme.TextStyle.subtitle2()
-    case .body1: return AppTheme.TextStyle.body1()
-    case .body2: return AppTheme.TextStyle.body2()
-    case .small1: return AppTheme.TextStyle.small1()
-    case .small2: return AppTheme.TextStyle.small2()
-    case .small3: return AppTheme.TextStyle.small3()
-    case .small4: return AppTheme.TextStyle.small4()
-    case .button1: return AppTheme.TextStyle.button1()
-    case .button2: return AppTheme.TextStyle.button2()
-    case .button3: return AppTheme.TextStyle.button3()
-    }
-  }
-}
-
 extension AppButton {
   private func fontMapper(_ style: ButtonConfig.Style) -> Label.Style {
     switch style {
@@ -279,6 +189,7 @@ extension AppButton {
   VStack(spacing: 16) {
     AppButton(config: ButtonConfig(
       type: .primary,
+      isDisabled: true,
       title: "Sign In",
       fontStyle: .button1,
       icon: "arrow.right",
@@ -354,4 +265,66 @@ extension AppButton {
     ))
   }
   .padding(.vertical, 20)
+}
+
+
+
+
+//MARK: - Button Configuration
+struct ButtonConfig {
+  // Button Type
+  let type: ButtonTypes
+  
+  // Disable Button
+  var isDisabled: Bool = false
+  
+  // Button Title and Font Styling
+  let title: String
+  var fontStyle: Style = .button1
+  
+  // Button Icon and it's placement
+  var icon: String? = nil
+  var iconPosition: IconPosition? = nil
+  
+  // Button Size Customization Floats
+  var width: CGFloat? = nil
+  var height: CGFloat? = nil
+  var horizontalPadding: CGFloat = 16
+  var verticalPadding: CGFloat = 10
+  var strokeWidth: CGFloat = 2
+  var cornerRadius: CGFloat = .radius3
+  
+  // Button Color
+  var backgroundColor: Color = .blue
+  var foregroundColor: Color = .white
+  var strokeColor: Color = .blue
+  
+  // Button Action
+  let action: () -> Void
+}
+
+extension ButtonConfig {
+  enum Style {
+    case h1, h2, h3, h4, h5, subtitle1, subtitle2, body1, body2, small1, small2, small3, small4, button1, button2, button3
+  }
+  var textStyle: Font {
+    switch fontStyle {
+    case .h1: return AppTheme.TextStyle.h1()
+    case .h2: return AppTheme.TextStyle.h2()
+    case .h3: return AppTheme.TextStyle.h3()
+    case .h4: return AppTheme.TextStyle.h4()
+    case .h5: return AppTheme.TextStyle.h5()
+    case .subtitle1: return AppTheme.TextStyle.subtitle1()
+    case .subtitle2: return AppTheme.TextStyle.subtitle2()
+    case .body1: return AppTheme.TextStyle.body1()
+    case .body2: return AppTheme.TextStyle.body2()
+    case .small1: return AppTheme.TextStyle.small1()
+    case .small2: return AppTheme.TextStyle.small2()
+    case .small3: return AppTheme.TextStyle.small3()
+    case .small4: return AppTheme.TextStyle.small4()
+    case .button1: return AppTheme.TextStyle.button1()
+    case .button2: return AppTheme.TextStyle.button2()
+    case .button3: return AppTheme.TextStyle.button3()
+    }
+  }
 }
