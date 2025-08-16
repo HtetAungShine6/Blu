@@ -7,10 +7,16 @@ protocol AuthRepository {
 }
 
 final class AuthRepositoryImpl: AuthRepository {
-  private let googleOAuthService: GoogleOAuthService
   
-  init(googleOAuthService: GoogleOAuthService) {
+  private let googleOAuthService: GoogleOAuthService
+  private let networkManager: NetworkManagable
+  
+  init(
+    googleOAuthService: GoogleOAuthService,
+    networkManager: NetworkManagable = DefaultNetworkManager()
+  ) {
     self.googleOAuthService = googleOAuthService
+    self.networkManager = networkManager
   }
   
   func signIn(_ method: AuthMethods) async throws {
@@ -40,12 +46,24 @@ private extension AuthRepositoryImpl {
       throw NSError(domain: "Missing ID Token", code: 3)
     }
     
+    
     // other impl
     UserDefaults.standard.set(true, forKey: "appState")
   }
   
-  private func signInWithEmailPassword(dto: EmailSignInDto) async throws {
-    print("Sign in with email password not implemented")
+  private func signInWithEmailPassword(dto: EmailSignInDto) async throws -> SignInResponseStatus {
+    do {
+      let email = dto.email
+      let password = dto.password
+      let response = try await networkManager.request(AuthRouter.signIn(email: email, password: password), decodeTo: SignInResponseStatus.self)
+      print("respones is \(response)")
+      print(response.message.tokens)
+      print(response.message.user)
+      return response
+    } catch(let error) {
+      print("Error is \(error.localizedDescription)")
+      throw error
+    }
   }
   
   private func registerNewUser(dto: SignUpDto) async throws {

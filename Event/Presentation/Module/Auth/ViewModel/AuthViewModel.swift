@@ -72,6 +72,7 @@ private extension AuthViewModelImpl {
     isLoading = true
     defer { isLoading = false }
     do {
+      print("Invoked")
       try await authRepository.signIn(.emailPassword(dto: EmailSignInDto(email: signInemail, password: signInPassword)))
     } catch {
       self.error = error.localizedDescription

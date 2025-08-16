@@ -3,8 +3,6 @@ import SwiftUI
 struct SignInView<ViewModel: AuthViewModel>: View {
   
   @StateObject private var viewModel: ViewModel
-  @State private var email: String = ""
-  @State private var password: String = ""
   @State private var showValidation: Bool = false
   @State private var isDiabled: Bool = false
   @FocusState private var isEmailFocused: Bool
@@ -50,8 +48,8 @@ extension SignInView {
       isEmailFocused: $isEmailFocused,
       isPasswordFocused: $isPasswordFocused,
       useInSignIn: true,
-      email: $email,
-      password: $password,
+      email: $viewModel.signInemail,
+      password: $viewModel.signInPassword,
       validationMessage: viewModel.error,
       showValidation: showValidation))
     .onChange(of: viewModel.error) { _, newErrorValue in
@@ -64,7 +62,7 @@ extension SignInView {
       useInSignIn: true,
       isDisabled: isDiabled,
       action: {
-        let dto = EmailSignInDto(email: email, password: password)
+        let dto = EmailSignInDto(email: viewModel.signInemail, password: viewModel.signInPassword)
         Task {
           await viewModel.signIn(.emailPassword(dto: dto))
         }
