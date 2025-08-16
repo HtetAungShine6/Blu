@@ -3,7 +3,7 @@ import Foundation
 @MainActor
 protocol AuthViewModel: ObservableObject {
   var isLoading: Bool { get }
-  var error: String { get }
+  var error: String? { get set }
   func signIn(_ method: AuthMethods) async
   func signUp(_ dto: SignUpDto) async
   func signOut()
@@ -27,7 +27,7 @@ final class AuthViewModelImpl: AuthViewModel {
   @Published var confirmPassword: String = ""
   @Published var phoneNumber: String = ""
   @Published var isLoading: Bool = false
-  @Published var error: String = ""
+  @Published var error: String? = nil
   
   
   private let authRepository: AuthRepository
@@ -47,7 +47,7 @@ final class AuthViewModelImpl: AuthViewModel {
   
   
   func signOut() {
-    
+    UserDefaults.standard.set(false, forKey: "appState")
   }
   
   func signUp(_ dto: SignUpDto) async {

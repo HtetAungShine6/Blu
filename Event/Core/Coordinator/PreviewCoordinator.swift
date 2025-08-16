@@ -1,22 +1,24 @@
-//import Navio
-//import SwiftUI
-//
-//final class PreviewCoordinator: NavioCoordinating {
-//    @Published var path = NavigationPath()
-//
-//    func push(_ route: AppRoute) {
-//        path.append(route)
-//    }
-//
-//    func pop() {
-//        path.removeLast()
-//    }
-//
-//    func popToRoot() {
-//        path.removeLast(path.count)
-//    }
-//
-//    func reset() {
-//        path = NavigationPath()
-//    }
-//}
+import Navio
+import SwiftUI
+
+final class PreviewAuthNavigator: NavioCoordinating {
+    typealias Route = AuthRoute
+
+    @Published var path = NavigationPath()
+
+    func push(_ route: AuthRoute) {
+        print("Preview push:", route)
+    }
+
+    func pop() {
+        print("Preview pop")
+    }
+
+    func popToRoot() {
+        print("Preview popToRoot")
+    }
+
+    func reset() {
+        print("Preview reset")
+    }
+}

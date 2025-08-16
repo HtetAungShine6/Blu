@@ -57,10 +57,12 @@ struct TextBox: View {
         } else {
           TextField(config.placeholder, text: config.text)
             .font(config.textStyle)
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
             .foregroundColor(config.foregroundColor)
             .focused($isFocused)
             .onChange(of: config.text.wrappedValue) { _, newValue in
-              if config.type == .normal && config.useInSignIn {
+              if config.type == .normal && config.useInSignIn || config.useInSignUp {
                 validateEmail(newValue)
               }
             }
@@ -80,6 +82,7 @@ struct TextBox: View {
       .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
       .shadow(color: isFocused ? borderColor().opacity(0.4) : .clear, radius: isFocused ? 3 : 0, x: 0, y: 0)
       .animation(.easeInOut(duration: 0.25), value: isFocused)
+      .animation(.easeInOut(duration: 0.5), value: internalValidationColor)
       
       if shouldShowValidationMessage(), let message = validationMessage() {
         Text(message)
