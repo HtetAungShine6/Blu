@@ -46,6 +46,10 @@ struct SecureCompatibleTextField: UIViewRepresentable {
     tf.returnKeyType = .done
     tf.autocapitalizationType = .none
     tf.autocorrectionType = .no
+    
+    tf.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    tf.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    
     setText(for: tf, coordinator: context.coordinator)
     return tf
   }

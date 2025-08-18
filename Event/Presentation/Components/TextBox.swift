@@ -18,6 +18,7 @@ struct TextBox: View {
     VStack(alignment: .leading, spacing: 4) {
       HStack {
         iconWrapper
+          .fixedSize()
         if config.type == .secure {
           secureTextField
         } else {
@@ -290,7 +291,6 @@ extension TextBox {
 }
 
 extension TextBox {
-  
   private func icons(named icon: String) -> some View {
     Image(systemName: icon)
       .resizable()
@@ -315,6 +315,7 @@ extension TextBox {
       .textInputAutocapitalization(.never)
       .foregroundColor(config.foregroundColor)
       .focused(config.$isFocused)
+      .frame(maxWidth: .infinity)
       .onChange(of: config.text.wrappedValue) { _, newValue in
         if config.type == .normal && config.useInSignIn || config.useInSignUp {
           validateEmail(newValue)

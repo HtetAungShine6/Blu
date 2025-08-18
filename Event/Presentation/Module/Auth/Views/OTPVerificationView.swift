@@ -1,13 +1,19 @@
 import SwiftUI
 
-struct OTPVerificationView: View {
+struct OTPVerificationView<ViewModel: AuthViewModel>: View {
   
+  @StateObject private var viewModel: ViewModel
   @FocusState private var isFocused: Bool
   @State private var otp = Array(repeating: "", count: 4)
   @State private var shouldRestartTimer: Bool = false
   @State private var isTimerActive: Bool = true
-  var email: String = ""
+  private var email: String = ""
   private let totalSeconds: Int = 300
+  
+  init(viewModel: @autoclosure @escaping () -> ViewModel, email: String) {
+    _viewModel = StateObject(wrappedValue: viewModel())
+    self.email = email
+  }
   
   var body: some View {
     VStack(spacing: .spacer10) {
@@ -86,5 +92,5 @@ extension OTPVerificationView {
 
 
 #Preview {
-  OTPVerificationView(email: "kokoshine@gmail.com")
+  OTPVerificationView(viewModel: AuthViewModelImpl(authRepository: AuthRepositoryImpl(googleOAuthService: GoogleOAuthServiceImpl())), email: "kokoshine@gmail.com")
 }
