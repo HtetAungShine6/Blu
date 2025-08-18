@@ -2,7 +2,10 @@ import SwiftUI
 
 struct SignInView<ViewModel: AuthViewModel>: View {
   
-  @StateObject private var viewModel: ViewModel
+
+  @ObservedObject private var viewModel: ViewModel
+  @State private var email: String = ""
+  @State private var password: String = ""
   @State private var showValidation: Bool = false
   @State private var isDiabled: Bool = false
   @FocusState private var isEmailFocused: Bool
@@ -11,7 +14,7 @@ struct SignInView<ViewModel: AuthViewModel>: View {
   let navigator: AuthNavigator
   
   init(viewModel: @autoclosure @escaping () -> ViewModel, navigator: AuthNavigator) {
-    _viewModel = StateObject(wrappedValue: viewModel())
+    _viewModel = ObservedObject(wrappedValue: viewModel())
     self.navigator = navigator
   }
   
@@ -51,7 +54,8 @@ extension SignInView {
       email: $viewModel.signInemail,
       password: $viewModel.signInPassword,
       validationMessage: viewModel.error,
-      showValidation: showValidation))
+      showValidation: showValidation
+    ))
     .onChange(of: viewModel.error) { _, newErrorValue in
       showValidation = newErrorValue != nil && !newErrorValue!.isEmpty
     }

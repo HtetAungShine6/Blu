@@ -19,6 +19,15 @@ final class AuthRepositoryImpl: AuthRepository {
     self.networkManager = networkManager
   }
   
+  func DefaultNetworkManagersignIn(_ method: AuthMethods) async throws {
+    switch method {
+    case .google:
+      try await signInWithGoogle()
+    case .emailPassword(let dto):
+      try await signInWithEmailPassword(dto: dto)
+    }
+  }
+  
   func signIn(_ method: AuthMethods) async throws {
     switch method {
     case .google:

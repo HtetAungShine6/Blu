@@ -16,54 +16,12 @@ struct TextBox: View {
   
   var body: some View {
     VStack(alignment: .leading, spacing: 4) {
-      HStack() {
-        if let icon = config.icon {
-          Image(systemName: icon)
-            .resizable()
-            .scaledToFit()
-            .frame(width: 18, height: 18)
-            .frame(width: 24, alignment: .center)
-            .foregroundColor(config.strokeColor)
-        }
-        
+      HStack {
+        iconWrapper
         if config.type == .secure {
-          SecureCompatibleTextField(
-            text: config.text,
-            placeholder: config.placeholder,
-            isSecureEntry: !isSecureVisible,
-            font: config.textStyle,
-            textColor: UIColor(config.foregroundColor)
-          )
-          .focused(config.$isFocused)
-          .onChange(of: config.text.wrappedValue) { _, newValue in
-            if config.type == .secure && config.useInSignUp {
-              validatePassword(newValue)
-            } else if config.type == .secure && config.useInSignIn {
-              validateEmail(newValue)
-            }
-          }
-          
-          Button {
-            isSecureVisible.toggle()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-              config.isFocused = true
-            }
-          } label: {
-            Image(systemName: isSecureVisible ? "eye.slash" : "eye")
-              .foregroundColor(config.strokeColor)
-          }
+          secureTextField
         } else {
-          TextField(config.placeholder, text: config.text)
-            .font(config.textStyle)
-            .autocorrectionDisabled()
-            .textInputAutocapitalization(.never)
-            .foregroundColor(config.foregroundColor)
-            .focused(config.$isFocused)
-            .onChange(of: config.text.wrappedValue) { _, newValue in
-              if config.type == .normal && config.useInSignIn || config.useInSignUp {
-                validateEmail(newValue)
-              }
-            }
+          normalTextField
         }
       }
       .padding(.horizontal, config.horizontalPadding)
@@ -71,24 +29,32 @@ struct TextBox: View {
       .frame(maxWidth: config.width ?? .infinity, maxHeight: config.height)
       .background(config.backgroundColor)
       .overlay(
-        RoundedRectangle(cornerRadius: config.cornerRadius)
-          .stroke(
-            borderColor(),
-            lineWidth: config.strokeWidth
-          )
+        textBoxOutline
       )
       .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
       .shadow(color: config.isFocused ? borderColor().opacity(0.4) : .clear, radius: config.isFocused ? 3 : 0, x: 0, y: 0)
       .animation(.easeInOut(duration: 0.3), value: config.isFocused)
       .animation(.easeInOut(duration: 0.3), value: internalValidationColor)
       
-      if shouldShowValidationMessage(), let message = validationMessage() {
-        Text(message)
+      //      if shouldShowValidationMessage(), let message = validationMessage() {
+      //        Text(message)
+      //          .font(.caption)
+      //          .foregroundColor(validationColor() ?? .red)
+      //          .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
+      //          .animation(.easeInOut(duration: 0.3), value: internalValidationMessage)
+      //      }
+      ZStack(alignment: .leading) {
+        Text("Placeholder") 
           .font(.caption)
-          .foregroundColor(validationColor() ?? .red)
-          .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
-          .animation(.easeInOut(duration: 0.3), value: internalValidationMessage)
+          .opacity(0)
+        
+        if shouldShowValidationMessage(), let message = validationMessage() {
+          Text(message)
+            .font(.caption)
+            .foregroundColor(validationColor() ?? .red)
+        }
       }
+      .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
     }
     .onAppear {
       if config.useInSignUp {
@@ -343,5 +309,77 @@ extension TextBox {
       }
       return config.strokeColor
     }
+  }
+}
+
+extension TextBox {
+  
+  private func icons(named icon: String) -> some View {
+    Image(systemName: icon)
+      .resizable()
+      .scaledToFit()
+      .frame(width: 18, height: 18)
+      .frame(width: 24, alignment: .center)
+      .foregroundColor(config.strokeColor)
+  }
+  
+  private var iconWrapper: some View {
+    if let icon = config.icon {
+      return AnyView(icons(named: icon))
+    } else {
+      return AnyView(EmptyView())
+    }
+  }
+  
+  private var normalTextField: some View {
+    TextField(config.placeholder, text: config.text)
+      .font(config.textStyle)
+      .autocorrectionDisabled()
+      .textInputAutocapitalization(.never)
+      .foregroundColor(config.foregroundColor)
+      .focused(config.$isFocused)
+      .onChange(of: config.text.wrappedValue) { _, newValue in
+        if config.type == .normal && config.useInSignIn || config.useInSignUp {
+          validateEmail(newValue)
+        }
+      }
+  }
+  
+  private var secureTextField: some View {
+    HStack {
+      SecureCompatibleTextField(
+        text: config.text,
+        placeholder: config.placeholder,
+        isSecureEntry: !isSecureVisible,
+        font: config.textStyle,
+        textColor: UIColor(config.foregroundColor)
+      )
+      .focused(config.$isFocused)
+      .onChange(of: config.text.wrappedValue) { _, newValue in
+        if config.type == .secure && config.useInSignUp {
+          validatePassword(newValue)
+        } else if config.type == .secure && config.useInSignIn {
+          validateEmail(newValue)
+        }
+      }
+      
+      Button {
+        isSecureVisible.toggle()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          config.isFocused = true
+        }
+      } label: {
+        Image(systemName: isSecureVisible ? "eye.slash" : "eye")
+          .foregroundColor(config.strokeColor)
+      }
+    }
+  }
+  
+  private var textBoxOutline: some View {
+    RoundedRectangle(cornerRadius: config.cornerRadius)
+      .stroke(
+        borderColor(),
+        lineWidth: config.strokeWidth
+      )
   }
 }

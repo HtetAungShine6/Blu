@@ -78,5 +78,5 @@ enum AuthRouter: APIRouter {
       return ["idToken": idToken, "provider": "\(provider)"]
     }
   }
-  
+
 }

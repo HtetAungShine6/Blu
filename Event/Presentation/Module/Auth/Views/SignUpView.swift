@@ -3,7 +3,7 @@ import Navio
 
 struct SignUpView<ViewModel: AuthViewModel>: View {
   
-  @StateObject private var viewModel: ViewModel
+  @ObservedObject private var viewModel: ViewModel
   @FocusState private var isFullNameFoucsed: Bool
   @FocusState private var isEmailFocused: Bool
   @FocusState private var isPasswordFocused: Bool
@@ -18,7 +18,7 @@ struct SignUpView<ViewModel: AuthViewModel>: View {
   let navigator: AuthNavigator
   
   init(viewModel: @autoclosure @escaping () -> ViewModel, navigator: AuthNavigator) {
-    _viewModel = StateObject(wrappedValue: viewModel())
+    _viewModel = ObservedObject(wrappedValue: viewModel())
     self.navigator = navigator
   }
   
