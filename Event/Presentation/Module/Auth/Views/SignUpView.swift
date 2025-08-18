@@ -40,6 +40,7 @@ struct SignUpView<ViewModel: AuthViewModel>: View {
         googleSignInButton
         signInNavigator
       }
+      .ignoresSafeArea(.keyboard, edges: .bottom)
     }
   }
 }

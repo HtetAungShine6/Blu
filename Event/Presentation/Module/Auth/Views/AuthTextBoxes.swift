@@ -16,6 +16,7 @@ struct AuthTextBoxesConfig {
 
 struct AuthTextBoxes: View {
   
+  @Environment(\.colorScheme) var colorScheme
   var config: AuthTextBoxesConfig
   
   var body: some View {
@@ -30,7 +31,7 @@ struct AuthTextBoxes: View {
           text: config.$email,
           height: 60,
           font: .body1,
-          strokeColor: .textSecondaryDark,
+          strokeColor: colorScheme == .dark ? .gray : .defaultBorder,
           validationMessage: config.validationMessage,
           validationColor: .red,
           showValidation: config.showValidation
@@ -44,7 +45,7 @@ struct AuthTextBoxes: View {
           text: config.$password,
           height: 60,
           font: .body1,
-          strokeColor: .textSecondaryDark,
+          strokeColor: colorScheme == .dark ? .gray : .defaultBorder,
           validationMessage: config.validationMessage,
           showValidation: config.showValidation
         ))
@@ -58,7 +59,7 @@ struct AuthTextBoxes: View {
             text: config.fullName,
             height: 60,
             font: .body1,
-            strokeColor: .textSecondaryDark
+            strokeColor: colorScheme == .dark ? .gray : .defaultBorder
           ))
         }
         
@@ -71,7 +72,7 @@ struct AuthTextBoxes: View {
           text: config.$email,
           height: 60,
           font: .body1,
-          strokeColor: .textSecondaryDark,
+          strokeColor: colorScheme == .dark ? .gray : .defaultBorder,
           validationMessage: config.validationMessage,
           validationColor: .red,
           showValidation: config.showValidation
@@ -86,7 +87,7 @@ struct AuthTextBoxes: View {
           text: config.$password,
           height: 60,
           font: .body1,
-          strokeColor: .textSecondaryDark,
+          strokeColor: colorScheme == .dark ? .gray : .defaultBorder,
           validationMessage: config.validationMessage,
           showValidation: config.showValidation
         ))
@@ -101,7 +102,7 @@ struct AuthTextBoxes: View {
             text: config.confirmPassword,
             height: 60,
             font: .body1,
-            strokeColor: .textSecondaryDark,
+            strokeColor: colorScheme == .dark ? .gray : .defaultBorder,
             passwordToMatch: config.password
           ))
         }

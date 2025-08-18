@@ -347,7 +347,7 @@ extension TextBox {
           config.isFocused = true
         }
       } label: {
-        Image(systemName: isSecureVisible ? "eye.slash" : "eye")
+        Image(systemName: isSecureVisible ? "eye" : "eye.slash")
           .foregroundColor(config.strokeColor)
       }
     }
@@ -363,21 +363,21 @@ extension TextBox {
   
   private var textBoxAlertMessage: some View {
     ZStack(alignment: .leading) {
-      Text("Placeholder")
-        .font(.caption)
+      Label("Placeholder")
+        .font(.small2)
         .opacity(0)
-        .padding(.top, 0)
-        .padding(.bottom, -14)
+        .padding(.top, -3)
+        .padding(.bottom, -15)
       
       if shouldShowValidationMessage(), let message = validationMessage() {
-        Text(message)
-          .font(.caption)
-          .foregroundColor(validationColor() ?? .red)
+        Label(message)
+          .font(.small2)
+          .color(validationColor() ?? .red)
+          .padding(.top, -3)
+          .padding(.bottom, -15)
       }
     }
     .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
-    .padding(.top, 0)
-    .padding(.bottom, -14)
     .frame(maxWidth: config.width ?? .infinity, alignment: .leading)
     .fixedSize(horizontal: false, vertical: true)
     .animation(.easeInOut(duration: 0.3), value: internalValidationMessage)

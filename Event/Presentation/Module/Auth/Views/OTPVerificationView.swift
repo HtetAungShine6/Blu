@@ -2,7 +2,7 @@ import SwiftUI
 
 struct OTPVerificationView<ViewModel: AuthViewModel>: View {
   
-  @StateObject private var viewModel: ViewModel
+  @ObservedObject private var viewModel: ViewModel
   @FocusState private var isFocused: Bool
   @State private var otp = Array(repeating: "", count: 4)
   @State private var shouldRestartTimer: Bool = false
@@ -11,7 +11,7 @@ struct OTPVerificationView<ViewModel: AuthViewModel>: View {
   private let totalSeconds: Int = 300
   
   init(viewModel: @autoclosure @escaping () -> ViewModel, email: String) {
-    _viewModel = StateObject(wrappedValue: viewModel())
+    _viewModel = ObservedObject(wrappedValue: viewModel())
     self.email = email
   }
   
