@@ -30,10 +30,7 @@ struct OTPBoxes: View {
       }
     }
     .onAppear {
-      DispatchQueue.main.async {
-        focusedIndex = 0
-        isFocused = true
-      }
+      triggeringOnFocus()
     }
   }
 }
@@ -85,6 +82,13 @@ extension OTPBoxes {
           focusedIndex = nil
         }
       }
+    }
+  }
+  
+  private func triggeringOnFocus() {
+    DispatchQueue.main.async {
+      focusedIndex = 0
+      isFocused = true
     }
   }
 }

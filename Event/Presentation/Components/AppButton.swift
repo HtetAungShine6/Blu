@@ -139,7 +139,8 @@ extension AppButton {
   private var primaryButtonText: some View {
     Label(config.title)
       .font(fontMapper(config.fontStyle))
-      .color(config.foregroundColor)  }
+      .color(config.foregroundColor)
+  }
   
   private var outlineButtonText: some View {
     Label(config.title)
@@ -266,7 +267,6 @@ extension AppButton {
   }
   .padding(.vertical, 20)
 }
-
 
 
 
