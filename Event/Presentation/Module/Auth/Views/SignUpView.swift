@@ -32,7 +32,7 @@ struct SignUpView<ViewModel: AuthViewModel>: View {
           isPasswordFocused = false
           isConfirmPasswordFocused = false
         }
-      VStack(spacing: .spacer7) {
+      VStack(spacing: .spacer9) {
         title
         textBoxesForSignUp
         emailSignUpButton

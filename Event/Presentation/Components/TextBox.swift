@@ -35,34 +35,11 @@ struct TextBox: View {
       .shadow(color: config.isFocused ? borderColor().opacity(0.4) : .clear, radius: config.isFocused ? 3 : 0, x: 0, y: 0)
       .animation(.easeInOut(duration: 0.3), value: config.isFocused)
       .animation(.easeInOut(duration: 0.3), value: internalValidationColor)
-      
-      //      if shouldShowValidationMessage(), let message = validationMessage() {
-      //        Text(message)
-      //          .font(.caption)
-      //          .foregroundColor(validationColor() ?? .red)
-      //          .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
-      //          .animation(.easeInOut(duration: 0.3), value: internalValidationMessage)
-      //      }
-      ZStack(alignment: .leading) {
-        Text("Placeholder") 
-          .font(.caption)
-          .opacity(0)
-        
-        if shouldShowValidationMessage(), let message = validationMessage() {
-          Text(message)
-            .font(.caption)
-            .foregroundColor(validationColor() ?? .red)
-        }
-      }
-      .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
+  
+      textBoxAlertMessage
     }
     .onAppear {
-      if config.useInSignUp {
-        validatePassword(config.text.wrappedValue)
-      }
-      if config.useInSignIn {
-        validateEmail(config.text.wrappedValue)
-      }
+      textBoxUsage()
     }
   }
 }
@@ -85,7 +62,7 @@ struct TextBoxConfig {
   var font: Style
   var backgroundColor: Color = Color(.systemBackground)
   var foregroundColor: Color = .primary
-  var strokeColor: Color = .gray
+  var strokeColor: Color = .defaultBorder
   var strokeWidth: CGFloat = 1
   var cornerRadius: CGFloat = .radius3
   var validationMessage: String? = nil
@@ -381,5 +358,36 @@ extension TextBox {
         borderColor(),
         lineWidth: config.strokeWidth
       )
+  }
+  
+  private var textBoxAlertMessage: some View {
+    ZStack(alignment: .leading) {
+      Text("Placeholder")
+        .font(.caption)
+        .opacity(0)
+        .padding(.top, 0)
+        .padding(.bottom, -14)
+      
+      if shouldShowValidationMessage(), let message = validationMessage() {
+        Text(message)
+          .font(.caption)
+          .foregroundColor(validationColor() ?? .red)
+      }
+    }
+    .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
+    .padding(.top, 0)
+    .padding(.bottom, -14)
+    .frame(maxWidth: config.width ?? .infinity, alignment: .leading)
+    .fixedSize(horizontal: false, vertical: true)
+    .animation(.easeInOut(duration: 0.3), value: internalValidationMessage)
+  }
+  
+  private func textBoxUsage() {
+    if config.useInSignUp {
+      validatePassword(config.text.wrappedValue)
+    }
+    if config.useInSignIn {
+      validateEmail(config.text.wrappedValue)
+    }
   }
 }

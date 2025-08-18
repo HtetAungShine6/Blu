@@ -19,7 +19,7 @@ struct AuthTextBoxes: View {
   var config: AuthTextBoxesConfig
   
   var body: some View {
-    VStack(spacing: .spacer10) {
+    VStack(spacing: .spacer9) {
       if config.useInSignIn {
         TextBox(config: TextBoxConfig(
           isFocused: config.$isEmailFocused,

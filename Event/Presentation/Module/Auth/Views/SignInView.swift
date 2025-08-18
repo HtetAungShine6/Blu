@@ -27,7 +27,7 @@ struct SignInView<ViewModel: AuthViewModel>: View {
           isPasswordFocused = false
         }
       
-      VStack(spacing: .spacer7) {
+      VStack(spacing: .spacer9) {
         title
         textBoxesForSignIn
         emailSignInButton
