@@ -8,14 +8,6 @@ protocol NetworkManagable {
 final class DefaultNetworkManager: NetworkManagable {
   func request<T: Decodable>(_ router: APIRouter, decodeTo type: T.Type) async throws -> T {
     let request = try buildRequest(from: router)
-    print("Request data is \(request)")
-    print(request.httpMethod)
-    if let httpBody = request.httpBody {
-      if let jsonString = String(data: httpBody, encoding: .utf8) {
-        print(jsonString)
-      }
-    }
-    print(request.allHTTPHeaderFields)
     let (data, response) = try await URLSession.shared.data(for: request)
     
     guard let httpResponse = response as? HTTPURLResponse,

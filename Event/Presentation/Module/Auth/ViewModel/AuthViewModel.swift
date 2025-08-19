@@ -6,6 +6,9 @@ protocol AuthViewModel: ObservableObject {
   var error: String? { get set }
   func signIn(_ method: AuthMethods) async
   func signUp(_ dto: SignUpDto) async
+  func resendOtp(_ dto: ResendOtpDto) async
+  func verifyOtp(_ dto: VerifyOtpDto) async
+  func setUpPassword(_ dto: PasswordSetUpDto) async
   func signOut()
   var signInemail: String { get set }
   var signInPassword: String { get set }
@@ -18,6 +21,7 @@ protocol AuthViewModel: ObservableObject {
 
 
 final class AuthViewModelImpl: AuthViewModel {
+  
   
   @Published var signInemail: String = ""
   @Published var signInPassword: String = ""
@@ -47,12 +51,43 @@ final class AuthViewModelImpl: AuthViewModel {
   
   
   func signOut() {
-    UserDefaults.standard.set(false, forKey: "appState")
+    authRepository.signOut()
   }
   
   func signUp(_ dto: SignUpDto) async {
     await registerNewUser(dto: dto)
   }
+  
+  func resendOtp(_ dto: ResendOtpDto) async {
+    isLoading = true
+    defer { isLoading = false }
+    do {
+      try await authRepository.resendOtp(dto)
+    } catch {
+      self.error = error.localizedDescription
+    }
+  }
+  
+  func verifyOtp(_ dto: VerifyOtpDto) async {
+    isLoading = true
+    defer { isLoading = false }
+    do {
+      try await authRepository.verifyOtp(dto)
+    } catch {
+      self.error = error.localizedDescription
+    }
+  }
+  
+  func setUpPassword(_ dto: PasswordSetUpDto) async {
+    isLoading = true
+    defer { isLoading = false }
+    do {
+      try await authRepository.setUpPassword(dto)
+    } catch {
+      self.error = error.localizedDescription
+    }
+  }
+  
   
 }
 
@@ -83,10 +118,9 @@ private extension AuthViewModelImpl {
     isLoading = true
     defer { isLoading = false }
     do {
-      try await authRepository.signUp(SignUpDto(name: fullName, email: email, password: password, confirmPasword: confirmPassword, phoneNumber: phoneNumber))
+      try await authRepository.signUp(SignUpDto(name: fullName, email: email))
     } catch {
       self.error = error.localizedDescription
     }
   }
-  
 }

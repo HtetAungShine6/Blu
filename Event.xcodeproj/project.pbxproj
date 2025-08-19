@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F51D19A2E54FCE30000097F /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7F51D1992E54FCE30000097F /* KeychainSwift */; };
 		B3E6131D2E3F6327002E2BEF /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B3E6131C2E3F6327002E2BEF /* GoogleSignIn */; };
 		B3E6131F2E3F6327002E2BEF /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B3E6131E2E3F6327002E2BEF /* GoogleSignInSwift */; };
 		B3E613262E3F649C002E2BEF /* Navio in Frameworks */ = {isa = PBXBuildFile; productRef = B3E613252E3F649C002E2BEF /* Navio */; };
@@ -44,6 +45,7 @@
 			files = (
 				B3E613262E3F649C002E2BEF /* Navio in Frameworks */,
 				B3E6131D2E3F6327002E2BEF /* GoogleSignIn in Frameworks */,
+				7F51D19A2E54FCE30000097F /* KeychainSwift in Frameworks */,
 				B3E6131F2E3F6327002E2BEF /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -98,6 +100,7 @@
 				B3E6131C2E3F6327002E2BEF /* GoogleSignIn */,
 				B3E6131E2E3F6327002E2BEF /* GoogleSignInSwift */,
 				B3E613252E3F649C002E2BEF /* Navio */,
+				7F51D1992E54FCE30000097F /* KeychainSwift */,
 			);
 			productName = Event;
 			productReference = B3E612B92E3F5D93002E2BEF /* Event.app */;
@@ -130,6 +133,7 @@
 			packageReferences = (
 				B3E6131B2E3F6327002E2BEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				B3E613242E3F649C002E2BEF /* XCRemoteSwiftPackageReference "Navio" */,
+				7F51D1982E54FCE30000097F /* XCRemoteSwiftPackageReference "keychain-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B3E612BA2E3F5D93002E2BEF /* Products */;
@@ -289,7 +293,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Event/Preview Content\"";
-				DEVELOPMENT_TEAM = MAFKHQX2GF;
+				DEVELOPMENT_TEAM = B2KXH9S8WX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Event/Info.plist;
@@ -319,7 +323,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Event/Preview Content\"";
-				DEVELOPMENT_TEAM = MAFKHQX2GF;
+				DEVELOPMENT_TEAM = B2KXH9S8WX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Event/Info.plist;
@@ -365,6 +369,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		7F51D1982E54FCE30000097F /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 24.0.0;
+			};
+		};
 		B3E6131B2E3F6327002E2BEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -384,6 +396,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		7F51D1992E54FCE30000097F /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7F51D1982E54FCE30000097F /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
 		B3E6131C2E3F6327002E2BEF /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B3E6131B2E3F6327002E2BEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;

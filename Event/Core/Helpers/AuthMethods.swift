@@ -11,7 +11,19 @@ struct EmailSignInDto: Encodable {
 struct SignUpDto: Encodable {
   let name: String
   let email: String
+}
+
+struct ResendOtpDto: Encodable {
+  let name: String
+  let email: String
+}
+
+struct VerifyOtpDto: Encodable {
+  let email: String
+  let otp: String
+}
+
+struct PasswordSetUpDto: Encodable {
   let password: String
-  let confirmPasword: String
-  let phoneNumber: String
+  let email: String
 }

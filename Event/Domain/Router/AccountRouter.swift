@@ -9,7 +9,7 @@ enum AuthRouter: APIRouter {
   case signIn(email: String, password: String)
   case signUp(email: String, name: String)
   case verifyEmail(email: String, otp: String)
-  case resendOtp(email: String)
+  case resendOtp(firstName: String, email: String)
   case setUpPassword(email: String, password: String)
   case googleSignIn(idToken: String, provider: SSOProvider)
   

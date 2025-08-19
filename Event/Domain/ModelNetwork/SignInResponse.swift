@@ -20,7 +20,7 @@ struct SignUpResponse: Decodable {
 }
 
 
-struct VerifyEmailReponse: Decodable {
+struct VerifyOtpReponse: Decodable {
   let success: Bool
   let message: String
 }
