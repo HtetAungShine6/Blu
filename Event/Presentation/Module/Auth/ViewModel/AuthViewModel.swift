@@ -97,7 +97,7 @@ private extension AuthViewModelImpl {
     isLoading = true
     defer { isLoading = false }
     do {
-      let idToken = try await authRepository.signIn(.google)
+      _ = try await authRepository.signIn(.google)
     } catch {
       self.error = error.localizedDescription
     }

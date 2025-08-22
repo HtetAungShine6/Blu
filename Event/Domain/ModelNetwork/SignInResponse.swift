@@ -5,10 +5,16 @@ struct SignInResponseStatus: Decodable {
   let message: SignInResponse
 }
 
+struct OAuthLogInResponseStauts: Decodable {
+  let success: Bool
+  let message: SignInResponse
+}
+
 struct SignInResponse: Decodable {
   let tokens: Tokens?
   let user: User?
 }
+
 
 struct SignUpResponseStatus: Decodable {
   let success: Bool
@@ -18,7 +24,6 @@ struct SignUpResponseStatus: Decodable {
 struct SignUpResponse: Decodable {
   let message: String
 }
-
 
 struct VerifyOtpReponse: Decodable {
   let success: Bool

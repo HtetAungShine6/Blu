@@ -103,6 +103,14 @@ private extension AuthRepositoryImpl {
       throw NSError(domain: "Missing ID Token", code: 3)
     }
     
+    do {
+      let response = try await networkManager.request(AuthRouter.googleSignIn(idToken: returnedIdToken, provider: .google),decodeTo: OAuthLogInResponseStauts.self)
+      saveTokensAndState(response: response.message)
+    } catch {
+      print("Error is \(error.localizedDescription)")
+      throw error
+    }
+    
     
     // other impl
     UserDefaults.standard.set(true, forKey: "appState")
@@ -128,9 +136,7 @@ private extension AuthRepositoryImpl {
       try? localStorageManager.save(true, forKey: secureKeys.appStateKey)
     }
   }
-  
-  
-  
+    
   // MARK: -Sign Out
   private func signOutFromAccount() {
     let secureKeys = SecureKeys.shared
