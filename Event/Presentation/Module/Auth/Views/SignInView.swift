@@ -28,6 +28,7 @@ struct SignInView<ViewModel: AuthViewModel>: View {
         }
       
       VStack(spacing: .spacer9) {
+//        InputBox("Enter Name", text: $email)
         title
         textBoxesForSignIn
         emailSignInButton
