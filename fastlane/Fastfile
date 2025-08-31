@@ -11,7 +11,7 @@ scheme = "Event"
 export_method = "app-store" 
 key_id = "58G49UC4M4" 
 issuer_id = "148294b2-7612-46d9-9e06-477538a3f357" 
-key_filepath = "/Users/htetaungshine/iospj/Event/fastlane/secretKey.p8" 
+key_filepath = "/Users/htetaungshine/iospj/Event/fastlane/AuthKey_58G49UC4M4.p8" 
 ######## END IOS CONFIGURATIONS
 
 
