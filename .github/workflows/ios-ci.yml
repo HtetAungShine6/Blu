@@ -33,6 +33,9 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7.4'
+          
+      - name: Install Bundler
+        run: gem install bundler
       
       - name: Install Dependencies
         run: |
