@@ -17,7 +17,6 @@ jobs:
       ITUNES_TEAM_ID: ${{ secrets.ITUNES_TEAM_ID }}
       APPSTORE_TEAM_ID: ${{ secrets.APPSTORE_TEAM_ID }}
       MATCH_REPO_SSH: ${{ secrets.MATCH_REPO_SSH }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       BASE_URL: ${{ vars.BASE_URL }}
     
     steps:
