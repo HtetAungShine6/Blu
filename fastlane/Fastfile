@@ -53,17 +53,6 @@ platform :ios do
       distribute_external: true,
       groups: groups,
     )
-    slack(
-      slack_url: slack_weebhook_url,
-      message: "Build #{latest_build_number + 1} is available on TestFlight",
-      channel: "#your-channel",
-      default_payloads: [],
-      success: true,
-      payload: {
-        'Build Date' => Time.now,
-        'Build Number' => latest_build_number + 1
-      }
-    )
     clean_build_artifacts
   end
 end
