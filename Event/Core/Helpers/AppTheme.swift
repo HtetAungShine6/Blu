@@ -22,10 +22,11 @@ enum AppTheme {
   }
   
   enum AppColor {
-     enum TextColor {
-        public static let accent = Color("TextAccent")
-        public static let primaryDark = Color("TextPrimaryDark")
-        public static let secondaryDark = Color("TextSecondaryDark")
+    enum TextColor {
+      public static let accent = Color("TextAccent")
+      public static let primaryDark = Color("TextPrimaryDark")
+      public static let secondaryDark = Color("TextSecondaryDark")
+      public static let white = Color("TextWhite")
     }
     
     public static let accentColor = Color("Accent")

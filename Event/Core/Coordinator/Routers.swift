@@ -14,6 +14,10 @@ enum ProfileRoute: Hashable {
     case profile
 }
 
+enum AuthRoute: Hashable {
+  case signUp
+}
+
 
 enum Tabs: Hashable, CaseIterable {
     case home

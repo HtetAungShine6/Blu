@@ -7,71 +7,75 @@ enum TextBoxTypes {
 }
 
 struct TextBox: View {
+  
   var config: TextBoxConfig
+  
   @State private var isSecureVisible: Bool = false
+  @State private var internalValidationMessage: String? = nil
+  @State private var internalValidationColor: Color? = nil
   
   var body: some View {
-    HStack {
-      if let icon = config.icon {
-        Image(systemName: icon)
-          .foregroundColor(config.strokeColor)
-      }
-      
-      if config.type == .secure {
-        SecureCompatibleTextField(
-          text: config.text,
-          placeholder: config.placeholder,
-          isSecureEntry: !isSecureVisible,
-          font: config.textStyle,
-          textColor: UIColor(config.foregroundColor)
-        )
-        
-        Spacer(minLength: 8)
-        
-        Button {
-          isSecureVisible.toggle()
-        } label: {
-          Image(systemName: isSecureVisible ? "eye.slash" : "eye")
-            .foregroundColor(config.strokeColor)
+    VStack(alignment: .leading, spacing: 4) {
+      HStack {
+        iconWrapper
+          .fixedSize()
+        if config.type == .secure {
+          secureTextField
+        } else {
+          normalTextField
         }
-      } else {
-        TextField(config.placeholder, text: config.text)
-          .font(config.textStyle)
-          .foregroundColor(config.foregroundColor)
       }
+      .padding(.horizontal, config.horizontalPadding)
+      .padding(.vertical, config.verticalPadding)
+      .frame(maxWidth: config.width ?? .infinity, maxHeight: config.height)
+      .background(config.backgroundColor)
+      .overlay(
+        textBoxOutline
+      )
+      .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
+      .shadow(color: config.isFocused ? borderColor().opacity(0.4) : .clear, radius: config.isFocused ? 3 : 0, x: 0, y: 0)
+      .animation(.easeInOut(duration: 0.3), value: config.isFocused)
+      .animation(.easeInOut(duration: 0.3), value: internalValidationColor)
+  
+      textBoxAlertMessage
     }
-    .padding(.horizontal, config.horizontalPadding)
-    .padding(.vertical, config.verticalPadding)
-    .frame(width: config.width, height: config.height)
-    .background(config.backgroundColor)
-    .overlay(
-      RoundedRectangle(cornerRadius: config.cornerRadius)
-        .stroke(config.strokeColor, lineWidth: config.strokeWidth)
-    )
-    .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
+    .onAppear {
+      textBoxUsage()
+    }
   }
 }
 
+
 struct TextBoxConfig {
+  
+  @FocusState.Binding var isFocused: Bool
+  
+  let placeholder: String
+  var icon: String? = nil
+  let type: TextBoxTypes
+  var useInSignUp: Bool = false
+  var useInSignIn: Bool = false
+  var text: Binding<String>
+  var width: CGFloat? = nil
+  var height: CGFloat? = nil
+  var horizontalPadding: CGFloat = 12
+  var verticalPadding: CGFloat = 8
+  var font: Style
+  var backgroundColor: Color = Color(.systemBackground)
+  var foregroundColor: Color = .primary
+  var strokeColor: Color = .defaultBorder
+  var strokeWidth: CGFloat = 1
+  var cornerRadius: CGFloat = .radius3
+  var validationMessage: String? = nil
+  var validationColor: Color? = .red
+  var showValidation: Bool? = false
+  var passwordToMatch: String? = nil
+}
+
+extension TextBoxConfig {
   enum Style {
     case h1, h2, h3, h4, h5, subtitle1, subtitle2, body1, body2, small1, small2, small3, small4, button1, button2, button3
   }
-  
-  let placeholder: String
-  let icon: String?
-  let type: TextBoxTypes
-  var text: Binding<String>
-  var width: CGFloat?
-  var height: CGFloat?
-  var horizontalPadding: CGFloat
-  var verticalPadding: CGFloat
-  var font: Style
-  var backgroundColor: Color
-  var foregroundColor: Color
-  var strokeColor: Color
-  var strokeWidth: CGFloat
-  var cornerRadius: CGFloat
-  
   var textStyle: Font {
     switch font {
     case .h1: return AppTheme.TextStyle.h1()
@@ -92,46 +96,18 @@ struct TextBoxConfig {
     case .button3: return AppTheme.TextStyle.button3()
     }
   }
-  
-  init(
-    placeholder: String,
-    icon: String? = nil,
-    type: TextBoxTypes,
-    text: Binding<String>,
-    width: CGFloat? = nil,
-    height: CGFloat? = nil,
-    horizontalPadding: CGFloat = 12,
-    verticalPadding: CGFloat = 8,
-    font: Style,
-    backgroundColor: Color = Color(.systemBackground),
-    foregroundColor: Color = .primary,
-    strokeColor: Color = .gray,
-    strokeWidth: CGFloat = 1,
-    cornerRadius: CGFloat = .radius3
-  ) {
-    self.placeholder = placeholder
-    self.icon = icon
-    self.type = type
-    self.text = text
-    self.width = width
-    self.height = height
-    self.horizontalPadding = horizontalPadding
-    self.verticalPadding = verticalPadding
-    self.font = font
-    self.backgroundColor = backgroundColor
-    self.foregroundColor = foregroundColor
-    self.strokeColor = strokeColor
-    self.strokeWidth = strokeWidth
-    self.cornerRadius = cornerRadius
-  }
 }
 
 #Preview {
   @Previewable @State var username = ""
   @Previewable @State var password = ""
   @Previewable @State var sisiMomName = ""
-  VStack(spacing: 16) {
+  @Previewable @State var passwordSignUp = ""
+  @Previewable @State var passwordSignIn = ""
+  @FocusState var isFocused: Bool
+  VStack(spacing: .spacer7) {
     TextBox(config: TextBoxConfig(
+      isFocused: $isFocused,
       placeholder: "Username",
       icon: "person",
       type: .normal,
@@ -143,6 +119,7 @@ struct TextBoxConfig {
     ))
     
     TextBox(config: TextBoxConfig(
+      isFocused: $isFocused,
       placeholder: "Password",
       icon: "lock",
       type: .secure,
@@ -154,6 +131,62 @@ struct TextBoxConfig {
     ))
     
     TextBox(config: TextBoxConfig(
+      isFocused: $isFocused,
+      placeholder: "Password Sign In",
+      icon: "lock",
+      type: .secure,
+      text: $passwordSignIn,
+      width: 365,
+      height: 60,
+      font: .body1,
+      strokeColor: .textSecondaryDark,
+      validationMessage: "Wrong password",
+      validationColor: .red
+    ))
+    
+    TextBox(config: TextBoxConfig(
+      isFocused: $isFocused,
+      placeholder: "Email Sign In",
+      icon: "envelope",
+      type: .normal,
+      text: $passwordSignIn,
+      width: 365,
+      height: 60,
+      font: .body1,
+      strokeColor: .textSecondaryDark,
+      validationMessage: "Wrong email",
+      validationColor: .red,
+      showValidation: true
+    ))
+    
+    TextBox(config: TextBoxConfig(
+      isFocused: $isFocused,
+      placeholder: "Email Sign In 2",
+      icon: "envelope",
+      type: .normal,
+      useInSignIn: true,
+      text: $passwordSignIn,
+      width: 365,
+      height: 60,
+      font: .body1,
+      strokeColor: .textSecondaryDark
+    ))
+    
+    TextBox(config: TextBoxConfig(
+      isFocused: $isFocused,
+      placeholder: "Password Sign Up",
+      icon: "lock",
+      type: .secure,
+      useInSignUp: true,
+      text: $passwordSignUp,
+      width: 365,
+      height: 60,
+      font: .body1,
+      strokeColor: .textSecondaryDark
+    ))
+    
+    TextBox(config: TextBoxConfig(
+      isFocused: $isFocused,
       placeholder: "Enter sisi's mom name",
       type: .normal,
       text: $sisiMomName,
@@ -162,5 +195,200 @@ struct TextBoxConfig {
       font: .body1,
       strokeColor: .textSecondaryDark
     ))
+  }
+}
+
+extension TextBox {
+  
+  //MARK: - Email Validation
+  private func validateEmail(_ email: String) {
+    if email.isEmpty {
+      internalValidationMessage = nil
+      internalValidationColor = nil
+    } else if isValidEmail(email) {
+      internalValidationMessage = "Valid email"
+      internalValidationColor = .green
+    } else {
+      internalValidationMessage = "Invalid email format"
+      internalValidationColor = .red
+    }
+  }
+  
+  private func isValidEmail(_ email: String) -> Bool {
+    let pattern = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
+    return email.range(of: pattern, options: .regularExpression) != nil
+  }
+  
+  //MARK: - Password Validation
+  private func validatePassword(_ password: String) {
+    if password.isEmpty {
+      internalValidationMessage = nil
+      internalValidationColor = nil
+    } else if let match = config.passwordToMatch {
+      if password == match {
+        internalValidationMessage = "Passwords match"
+        internalValidationColor = .green
+      } else {
+        internalValidationMessage = "Passwords do not match"
+        internalValidationColor = .red
+      }
+    } else if isStrongPassword(password) {
+      internalValidationMessage = "Strong password"
+      internalValidationColor = .green
+    } else {
+      internalValidationMessage = "Password is weak"
+      internalValidationColor = .red
+    }
+  }
+  
+  private func isStrongPassword(_ password: String) -> Bool {
+    let pattern = #"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$"#
+    return password.range(of: pattern, options: .regularExpression) != nil
+  }
+  
+  //MARK: - Validation Message Setup (Color, String)
+  private func validationMessage() -> String? {
+    if config.useInSignUp || config.useInSignIn {
+      return internalValidationMessage
+    } else {
+      return config.validationMessage
+    }
+  }
+  
+  private func validationColor() -> Color? {
+    if config.useInSignUp || config.useInSignIn {
+      return internalValidationColor
+    } else {
+      return config.validationColor
+    }
+  }
+  
+  private func shouldShowValidationMessage() -> Bool {
+    if config.useInSignUp || config.useInSignIn {
+      return internalValidationMessage != nil
+    } else {
+      return (config.showValidation ?? false) && config.validationMessage != nil
+    }
+  }
+  
+  private func borderColor() -> Color {
+    if config.isFocused {
+      if config.useInSignUp || config.useInSignIn {
+        return internalValidationColor ?? .accent
+      } else if config.showValidation ?? false {
+        return config.validationColor ?? .accent
+      }
+      return .accent
+    } else {
+      if config.useInSignUp || config.useInSignIn {
+        return internalValidationColor ?? config.strokeColor
+      } else if config.showValidation ?? false {
+        return config.validationColor ?? config.strokeColor
+      }
+      return config.strokeColor
+    }
+  }
+}
+
+extension TextBox {
+  private func icons(named icon: String) -> some View {
+    Image(systemName: icon)
+      .resizable()
+      .scaledToFit()
+      .frame(width: 18, height: 18)
+      .frame(width: 24, alignment: .center)
+      .foregroundColor(config.strokeColor)
+  }
+  
+  private var iconWrapper: some View {
+    if let icon = config.icon {
+      return AnyView(icons(named: icon))
+    } else {
+      return AnyView(EmptyView())
+    }
+  }
+  
+  private var normalTextField: some View {
+    TextField(config.placeholder, text: config.text)
+      .font(config.textStyle)
+      .autocorrectionDisabled()
+      .textInputAutocapitalization(.never)
+      .foregroundColor(config.foregroundColor)
+      .focused(config.$isFocused)
+      .frame(maxWidth: .infinity)
+      .onChange(of: config.text.wrappedValue) { _, newValue in
+        if config.type == .normal && config.useInSignIn || config.useInSignUp {
+          validateEmail(newValue)
+        }
+      }
+  }
+  
+  private var secureTextField: some View {
+    HStack {
+      SecureCompatibleTextField(
+        text: config.text,
+        placeholder: config.placeholder,
+        isSecureEntry: !isSecureVisible,
+        font: config.textStyle,
+        textColor: UIColor(config.foregroundColor)
+      )
+      .focused(config.$isFocused)
+      .onChange(of: config.text.wrappedValue) { _, newValue in
+        if config.type == .secure && config.useInSignUp {
+          validatePassword(newValue)
+        } else if config.type == .secure && config.useInSignIn {
+          validateEmail(newValue)
+        }
+      }
+      
+      Button {
+        isSecureVisible.toggle()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          config.isFocused = true
+        }
+      } label: {
+        Image(systemName: isSecureVisible ? "eye" : "eye.slash")
+          .foregroundColor(config.strokeColor)
+      }
+    }
+  }
+  
+  private var textBoxOutline: some View {
+    RoundedRectangle(cornerRadius: config.cornerRadius)
+      .stroke(
+        borderColor(),
+        lineWidth: config.strokeWidth
+      )
+  }
+  
+  private var textBoxAlertMessage: some View {
+    ZStack(alignment: .leading) {
+      Label("Placeholder")
+        .font(.small2)
+        .opacity(0)
+        .padding(.top, -3)
+        .padding(.bottom, -15)
+      
+      if shouldShowValidationMessage(), let message = validationMessage() {
+        Label(message)
+          .font(.small2)
+          .color(validationColor() ?? .red)
+          .padding(.top, -3)
+          .padding(.bottom, -15)
+      }
+    }
+    .padding(.leading, config.icon == nil ? config.horizontalPadding : config.horizontalPadding + 24)
+    .frame(maxWidth: config.width ?? .infinity, alignment: .leading)
+    .fixedSize(horizontal: false, vertical: true)
+    .animation(.easeInOut(duration: 0.3), value: internalValidationMessage)
+  }
+  
+  private func textBoxUsage() {
+    if config.useInSignUp {
+      validatePassword(config.text.wrappedValue)
+    }
+    if config.useInSignIn {
+      validateEmail(config.text.wrappedValue)
+    }
   }
 }

@@ -46,6 +46,10 @@ struct SecureCompatibleTextField: UIViewRepresentable {
     tf.returnKeyType = .done
     tf.autocapitalizationType = .none
     tf.autocorrectionType = .no
+    
+    tf.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    tf.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    
     setText(for: tf, coordinator: context.coordinator)
     return tf
   }
@@ -60,7 +64,6 @@ struct SecureCompatibleTextField: UIViewRepresentable {
     if isSecureEntry {
       let securedText = String(repeating: "•", count: text.count)
       
-      // Adding new character → reveal last briefly
       if (textField.text?.count ?? 0) < text.count {
         var partiallyHidden = securedText
         partiallyHidden.removeLast()

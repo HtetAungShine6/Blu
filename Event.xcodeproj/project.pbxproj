@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3E0179B2E617E55008A1B93 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B3E0179A2E617E55008A1B93 /* KeychainSwift */; };
 		B3E6131D2E3F6327002E2BEF /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B3E6131C2E3F6327002E2BEF /* GoogleSignIn */; };
 		B3E6131F2E3F6327002E2BEF /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B3E6131E2E3F6327002E2BEF /* GoogleSignInSwift */; };
 		B3E613262E3F649C002E2BEF /* Navio in Frameworks */ = {isa = PBXBuildFile; productRef = B3E613252E3F649C002E2BEF /* Navio */; };
@@ -44,6 +45,7 @@
 			files = (
 				B3E613262E3F649C002E2BEF /* Navio in Frameworks */,
 				B3E6131D2E3F6327002E2BEF /* GoogleSignIn in Frameworks */,
+				B3E0179B2E617E55008A1B93 /* KeychainSwift in Frameworks */,
 				B3E6131F2E3F6327002E2BEF /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,10 +53,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B32BF5242E4BB73F0023BBB4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B3E612B02E3F5D93002E2BEF = {
 			isa = PBXGroup;
 			children = (
 				B3E612BB2E3F5D93002E2BEF /* Event */,
+				B32BF5242E4BB73F0023BBB4 /* Frameworks */,
 				B3E612BA2E3F5D93002E2BEF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +100,7 @@
 				B3E6131C2E3F6327002E2BEF /* GoogleSignIn */,
 				B3E6131E2E3F6327002E2BEF /* GoogleSignInSwift */,
 				B3E613252E3F649C002E2BEF /* Navio */,
+				B3E0179A2E617E55008A1B93 /* KeychainSwift */,
 			);
 			productName = Event;
 			productReference = B3E612B92E3F5D93002E2BEF /* Event.app */;
@@ -122,6 +133,7 @@
 			packageReferences = (
 				B3E6131B2E3F6327002E2BEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				B3E613242E3F649C002E2BEF /* XCRemoteSwiftPackageReference "Navio" */,
+				B3E017992E617E55008A1B93 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B3E612BA2E3F5D93002E2BEF /* Products */;
@@ -278,10 +290,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=*]" = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Event/Preview Content\"";
-				DEVELOPMENT_TEAM = MAFKHQX2GF;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = MAFKHQX2GF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Event/Info.plist;
@@ -297,6 +312,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.muchogang.Event;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.muchogang.Event";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -308,10 +325,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=*]" = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Event/Preview Content\"";
-				DEVELOPMENT_TEAM = MAFKHQX2GF;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = MAFKHQX2GF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Event/Info.plist;
@@ -327,6 +347,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.muchogang.Event;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.muchogang.Event";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -357,6 +379,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B3E017992E617E55008A1B93 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
 		B3E6131B2E3F6327002E2BEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -376,6 +406,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B3E0179A2E617E55008A1B93 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B3E017992E617E55008A1B93 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
 		B3E6131C2E3F6327002E2BEF /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B3E6131B2E3F6327002E2BEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
