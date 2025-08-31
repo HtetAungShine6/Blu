@@ -1,9 +1,13 @@
 name: ios-deployment
 
 on:
- push:
+  push:
     branches:
       - 'main'
+  pull_request:
+    branches:
+      - 'main'
+    
 
 jobs:
   build:
@@ -19,18 +23,18 @@ jobs:
       MATCH_REPO_SSH: ${{ secrets.MATCH_REPO_SSH }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       BASE_URL : ${{ vars.BASE_URL }}
-
+    
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '13.1.0'
-
+      
       - uses: actions/checkout@master
-
+      
       - uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.MATCH_REPO_KEY }}
-
+      
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7.4
@@ -39,20 +43,20 @@ jobs:
         run: |
           cd ios
           bundle install
-
+      
       - uses: actions/cache@v2
         with:
           path: Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
-
+      
       - name: Setup dependencies
         run: |
           npm install
           cd ios
           pod install
-
+      
       - name: Build and deploy
         run: |
           cd ios
