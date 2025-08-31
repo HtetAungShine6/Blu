@@ -1,9 +1,9 @@
 name: ios-deployment
 
 on:
- push:
+  push:
     branches:
-      - 'main'
+      - main
 
 jobs:
   build:
@@ -18,41 +18,41 @@ jobs:
       APPSTORE_TEAM_ID: ${{ secrets.APPSTORE_TEAM_ID }}
       MATCH_REPO_SSH: ${{ secrets.MATCH_REPO_SSH }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      BASE_URL : ${{ vars.BASE_URL }}
-
+      BASE_URL: ${{ vars.BASE_URL }}
+    
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '13.1.0'
-
-      - uses: actions/checkout@master
-
-      - uses: webfactory/ssh-agent@v0.5.0
+          xcode-version: '15.0'
+      
+      - uses: actions/checkout@v4
+      
+      - uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.MATCH_REPO_KEY }}
-
+      
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.4
+          ruby-version: '2.7.4'
       
       - name: Install Dependencies
         run: |
           cd ios
           bundle install
-
-      - uses: actions/cache@v3
+      
+      - uses: actions/cache@v4
         with:
-          path: Pods
+          path: ios/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
-
+      
       - name: Setup dependencies
         run: |
           npm install
           cd ios
           pod install
-
+      
       - name: Build and deploy
         run: |
           cd ios
