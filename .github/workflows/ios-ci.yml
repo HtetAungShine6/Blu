@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14  # Specify macOS 14 explicitly to avoid migration issues
     env:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       P8_AUTH_KEY: ${{ secrets.P8_AUTH_KEY }}
@@ -17,53 +17,74 @@ jobs:
       ITUNES_TEAM_ID: ${{ secrets.ITUNES_TEAM_ID }}
       APPSTORE_TEAM_ID: ${{ secrets.APPSTORE_TEAM_ID }}
       MATCH_REPO_SSH: ${{ secrets.MATCH_REPO_SSH }}
-      BASE_URL: ${{ vars.BASE_URL }}
     
     steps:
       # Setup Xcode
-      - uses: maxim-lobanov/setup-xcode@v1
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.2'
       
       # Checkout repo
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       
       # Setup SSH for Match repo
-      - uses: webfactory/ssh-agent@v0.9.0
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.MATCH_REPO_KEY }}
       
-      # Setup Ruby with Bundler cache
-      - uses: ruby/setup-ruby@v1
+      # Setup Node.js (specify version for consistency)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          ruby-version: '2.7.4'
-          bundler-cache: true
+          node-version: '18'
+          cache: 'npm'
       
-      # Install iOS dependencies
-      - name: Install Dependencies
-        run: |
-          cd ios
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+      # Install Node dependencies
+      - name: Install Node dependencies
+        run: npm ci
+      
+      # Setup Ruby with Bundler cache (updated to supported version)
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'  # Updated to supported Ruby version
+          bundler-cache: true
+          working-directory: ios
       
       # Cache Pods
-      - uses: actions/cache@v4
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
         with:
           path: ios/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
       
-      # Setup Node/npm and CocoaPods
-      - name: Setup dependencies
+      # Install CocoaPods
+      - name: Install CocoaPods
         run: |
-          npm install
           cd ios
-          pod install
+          pod install --repo-update
+      
+      # Create Auth Key file securely
+      - name: Create App Store Connect Auth Key
+        run: |
+          cd ios
+          echo "${{ secrets.P8_AUTH_KEY }}" > AuthKey_${{ secrets.APPSTORE_KEY_ID }}.p8
+          chmod 600 AuthKey_${{ secrets.APPSTORE_KEY_ID }}.p8
       
       # Build and deploy with Fastlane
-      - name: Build and deploy
+      - name: Build and deploy to App Store
         run: |
           cd ios
-          echo "${{ secrets.P8_AUTH_KEY }}" > secretKey.p8
           bundle exec fastlane ios release
+      
+      # Cleanup sensitive files
+      - name: Cleanup
+        if: always()
+        run: |
+          cd ios
+          rm -f AuthKey_*.p8
